@@ -5,27 +5,29 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "levels")
-public class Level {
+@Table(name = "level_room")
+public class LevelRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String sub;
+
     private Date created_at;
     private Date updated_at;
-    private Date deleted_at;
 
-    @OneToMany(mappedBy = "level")
-    private List<LevelZone> levelZones;
+    @ManyToOne
+    @JoinColumn(name = "zone_id")
+    private Zone zone;
 
-    @OneToMany(mappedBy = "level")
-    private List<LevelRoom> levelRooms;
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private Room room;
+
+    @ManyToOne
+    @JoinColumn(name = "level_id")
+    private Level level;
 
 }
-

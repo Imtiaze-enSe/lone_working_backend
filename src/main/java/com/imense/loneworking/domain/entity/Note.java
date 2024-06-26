@@ -11,12 +11,13 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@Table(name = "notes")
 public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idNote;
+    private Long id_note;
     private String note;
-    private Date noteCreatedAt;
+    private Date note_created_at;
 
     @ManyToOne
     @JoinColumn(name = "idAlert")

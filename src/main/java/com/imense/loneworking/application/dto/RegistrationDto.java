@@ -5,10 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ClientDto {
+public class RegistrationDto {
     private String emailClient;
     private String passwordClient;
-    private String logoClient;
-    private String raisonSocial;
-    private String adresseDuSiege;
+
 }

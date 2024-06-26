@@ -1,10 +1,10 @@
 package com.imense.loneworking.application.service.serviceImpl;
 
-import com.imense.loneworking.application.dto.ClientDto;
+import com.imense.loneworking.application.dto.RegistrationDto;
 import com.imense.loneworking.application.dto.LoginDto;
-import com.imense.loneworking.application.service.serviceInterface.ClientService;
-import com.imense.loneworking.domain.entity.Client;
-import com.imense.loneworking.domain.repository.ClientRepository;
+import com.imense.loneworking.application.service.serviceInterface.UserService;
+import com.imense.loneworking.domain.entity.User;
+import com.imense.loneworking.domain.repository.UserRepository;
 import com.imense.loneworking.infrastructure.security.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,16 +14,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ClientServiceImpl implements ClientService {
+public class UserServiceImpl implements UserService {
 
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;
 
-    public ClientServiceImpl(ClientRepository clientRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService) {
-        this.clientRepository = clientRepository;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
@@ -31,18 +31,15 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client registerClient(ClientDto clientDto) {
-        Client client = new Client();
-        client.setEmailClient(clientDto.getEmailClient());
-        client.setPasswordClient(passwordEncoder.encode(clientDto.getPasswordClient()));
-        client.setLogoClient(clientDto.getLogoClient());
-        client.setRaisonSocial(clientDto.getRaisonSocial());
-        client.setAdresseDuSiege(clientDto.getAdresseDuSiege());
-        return clientRepository.save(client);
+    public User registerUser(RegistrationDto registrationDto) {
+        User user = new User();
+        user.setEmail(registrationDto.getEmailClient());
+        user.setPassword(passwordEncoder.encode(registrationDto.getPasswordClient()));
+        return userRepository.save(user);
     }
 
     @Override
-    public String authenticateClient(LoginDto loginDto) {
+    public String authenticateUser(LoginDto loginDto) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDto.getEmailClient(), loginDto.getPasswordClient()));

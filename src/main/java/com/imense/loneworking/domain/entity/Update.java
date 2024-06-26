@@ -12,15 +12,17 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@Table(name = "updates")
 public class Update {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idUpdate;
+    private Long id_update;
     private String title;
     private String message;
-    private Date updateCreatedAt;
+    private Date update_created_at;
 
-    @OneToMany(mappedBy = "update")
-    private Set<Alert> alerts;
+    @ManyToOne
+    @JoinColumn(name = "idAlert")
+    private Alert alert;
 
 }

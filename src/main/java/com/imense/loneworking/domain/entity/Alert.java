@@ -6,26 +6,27 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
+@Table(name = "alerts")
 public class Alert {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idAlert;
-    private String alertStatus;
-    private String alertType;
-    private Date alertCreatedAt;
+    private Long id_alert;
+    private String alert_status;
+    private String alert_type;
+    private Date alert_created_at;
     private Integer duration;
 
     @ManyToOne
-    @JoinColumn(name = "idWorker")
-    private Worker worker;
+    @JoinColumn(name = "id")
+    private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "idUpdate")
-    private Update update;
+    @OneToMany(mappedBy = "alert")
+    private Set<Update> updates;
 
 }

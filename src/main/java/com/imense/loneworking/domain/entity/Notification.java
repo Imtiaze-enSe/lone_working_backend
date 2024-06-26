@@ -10,17 +10,18 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@Table(name = "notifications")
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idNotification;
-    private String notificationTitle;
-    private String notificationMessage;
-    private String notificationSentTo;
-    private Date notificationCreatedAt;
+    private Long id_notification;
+    private String notification_title;
+    private String notification_message;
+    private String notification_sent_to;
+    private Date notification_created_at;
 
     @ManyToOne
-    @JoinColumn(name = "idClient")
-    private Client client;
+    @JoinColumn(name = "id")
+    private User user;
 
 }

@@ -12,12 +12,13 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@Table(name = "qrcodes")
 public class QrCode {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idQrCode;
-    private Geometry qrCodePosition;
-    private Date qrCodeCreatedAt;
+    private Long id_qr_code;
+    private Geometry qr_code_position;
+    private Date qr_code_createdAt;
 
     @ManyToOne
     @JoinColumn(name = "idRoom")
