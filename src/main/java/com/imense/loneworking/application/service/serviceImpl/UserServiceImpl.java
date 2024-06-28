@@ -33,8 +33,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registerUser(RegistrationDto registrationDto) {
         User user = new User();
-        user.setEmail(registrationDto.getEmailClient());
-        user.setPassword(passwordEncoder.encode(registrationDto.getPasswordClient()));
+        user.setEmail(registrationDto.getEmail());
+        user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         return userRepository.save(user);
     }
 
@@ -42,12 +42,12 @@ public class UserServiceImpl implements UserService {
     public String authenticateUser(LoginDto loginDto) {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginDto.getEmailClient(), loginDto.getPasswordClient()));
+                    new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
         } catch (AuthenticationException e) {
             throw new RuntimeException("Invalid username or password");
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.getEmailClient());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.getEmail());
         return jwtUtil.generateToken(userDetails);
     }
 }
