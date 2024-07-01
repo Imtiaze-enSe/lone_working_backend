@@ -1,5 +1,7 @@
 package com.imense.loneworking.domain.entity;
 
+import com.imense.loneworking.domain.entity.Enum.TenantsPresentationTypeEnum;
+import com.imense.loneworking.domain.entity.Enum.TenantsTypeEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

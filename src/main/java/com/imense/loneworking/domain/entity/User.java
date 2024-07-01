@@ -1,10 +1,14 @@
 package com.imense.loneworking.domain.entity;
 
+import com.imense.loneworking.domain.entity.Enum.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.locationtech.jts.geom.Geometry;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,6 +25,7 @@ public class User {
     private String last_name;
     private String acronym;
     private String pin;
+    private long site_id;
     private Date birthday;
     private Date login_at;
     private String phone;
@@ -55,6 +60,17 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Notification> notifications;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role.getAuthorities();
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 }

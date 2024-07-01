@@ -1,14 +1,19 @@
 package com.imense.loneworking.application.service.serviceImpl;
 
+import com.imense.loneworking.domain.entity.Enum.UserRole;
 import com.imense.loneworking.domain.entity.Tenant;
 import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.domain.repository.UserRepository;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -20,11 +25,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new UsernameNotFoundException("Client not found");
-        }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(username);
+
+        UserRole userRole = user.getRole();
+        List<SimpleGrantedAuthority> authorities = userRole.getAuthorities();
+
+        authorities.forEach(authority -> System.out.println("Authority: " + authority.getAuthority()));
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                authorities
+        );
     }
 }
