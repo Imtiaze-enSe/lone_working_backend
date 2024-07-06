@@ -14,5 +14,6 @@ public class RegistrationDto {
     private String email;
     private String password;
     private UserRole role;
+    private int site_id;
 
 }

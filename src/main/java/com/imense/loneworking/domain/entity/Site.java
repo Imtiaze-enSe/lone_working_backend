@@ -1,10 +1,12 @@
 package com.imense.loneworking.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.locationtech.jts.geom.Geometry;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -34,9 +36,9 @@ public class Site {
     private String phone;
     private String website;
     private Boolean status;
-    private Date created_at;
-    private Date updated_at;
-    private Date deleted_at;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+    private LocalDateTime deleted_at;
     private String location;
 
     private Geometry plan2d;
@@ -45,7 +47,25 @@ public class Site {
     @ManyToOne
     @JoinColumn(name = "tenant_id")
     private Tenant tenant;
+
     @OneToMany(mappedBy = "site")
+    @JsonManagedReference
     private List<Zone> zones;
+
+    @PrePersist
+    protected void onCreate() {
+        created_at = LocalDateTime.now();
+        updated_at = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updated_at = LocalDateTime.now();
+    }
+
+    @PreRemove
+    protected void onDelete() {
+        deleted_at = LocalDateTime.now();
+    }
 
 }
