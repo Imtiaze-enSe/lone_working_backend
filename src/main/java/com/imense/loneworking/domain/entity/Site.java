@@ -48,7 +48,7 @@ public class Site {
     @JoinColumn(name = "tenant_id")
     private Tenant tenant;
 
-    @OneToMany(mappedBy = "site")
+    @OneToMany(mappedBy = "site", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Zone> zones;
 
