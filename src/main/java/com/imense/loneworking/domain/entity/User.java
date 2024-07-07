@@ -8,6 +8,7 @@ import org.locationtech.jts.geom.Geometry;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +26,8 @@ public class User implements UserDetails {
     private String last_name;
     private String acronym;
     private String pin;
-    private long site_id;
+    @Column(name = "site_id")
+    private Long siteId;
     private Date birthday;
     private Date login_at;
     private String phone;
@@ -44,11 +46,15 @@ public class User implements UserDetails {
     private String remember_token;
     @Lob
     private String fcm_token;
-    private Date created_at;
-    private Date updated_at;
-    private Date deleted_at;
+
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+    private LocalDateTime deleted_at;
 
     private Geometry position;
+    private String zone;
+    private String level;
+    private String room;
 
     @ManyToOne
     @JoinColumn(name = "tenant_id")
@@ -72,5 +78,21 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        created_at = LocalDateTime.now();
+        updated_at = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updated_at = LocalDateTime.now();
+    }
+
+    @PreRemove
+    protected void onDelete() {
+        deleted_at = LocalDateTime.now();
     }
 }

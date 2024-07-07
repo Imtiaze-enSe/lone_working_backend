@@ -36,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(registrationDto.getEmail());
         user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         user.setRole(registrationDto.getRole());
+        user.setSiteId(Long.valueOf(registrationDto.getSite_id()));
         user.setFcm_token(jwtUtil.generateToken(user));
         return userRepository.save(user);
     }
@@ -51,7 +52,6 @@ public class AuthServiceImpl implements AuthService {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.getEmail());
 
-        // Check if the user has the "ROLE_ADMIN" role
         if (userDetails.getAuthorities().stream()
                 .noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             throw new RuntimeException("User does not have admin privileges");
