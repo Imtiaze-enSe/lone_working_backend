@@ -36,7 +36,7 @@ public class ZoneInfoServiceImpl implements ZoneInfoService {
     public List<ZoneInfoDto> getSiteZoneInfo() {
         String username = getCurrentUsername();
         User user = userRepository.findByEmail(username);
-        Long siteId = user.getSite_id();
+        Long siteId = user.getSiteId();
 
         List<Zone> zones = zoneRepository.findBySiteId(siteId);
 
@@ -68,6 +68,7 @@ public class ZoneInfoServiceImpl implements ZoneInfoService {
 
         Zone zone = new Zone();
         zone.setName(zoneCreationDto.getZoneName());
+        System.out.println(zoneCreationDto.getPlanZone());
         zone.setPlan(zoneCreationDto.getPlanZone());
         zone.setSite(site);
         zone.setCreated_at(LocalDateTime.now());

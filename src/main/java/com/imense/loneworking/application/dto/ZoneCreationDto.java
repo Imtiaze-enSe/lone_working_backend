@@ -1,5 +1,6 @@
 package com.imense.loneworking.application.dto;
 
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

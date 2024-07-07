@@ -26,7 +26,8 @@ public class User implements UserDetails {
     private String last_name;
     private String acronym;
     private String pin;
-    private long site_id;
+    @Column(name = "site_id")
+    private Long siteId;
     private Date birthday;
     private Date login_at;
     private String phone;
@@ -51,6 +52,9 @@ public class User implements UserDetails {
     private LocalDateTime deleted_at;
 
     private Geometry position;
+    private String zone;
+    private String level;
+    private String room;
 
     @ManyToOne
     @JoinColumn(name = "tenant_id")

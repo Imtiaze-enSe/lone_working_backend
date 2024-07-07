@@ -36,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(registrationDto.getEmail());
         user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         user.setRole(registrationDto.getRole());
+        user.setSiteId(Long.valueOf(registrationDto.getSite_id()));
         user.setFcm_token(jwtUtil.generateToken(user));
         return userRepository.save(user);
     }

@@ -27,13 +27,14 @@ public class LoneworkingApplication {
 //					.email("admin@example.com")
 //					.password("test")
 //					.role(ADMIN)
-//					.site_id(1)
+//					.site_id(0)
 //					.build();
 //			System.out.println("Admin token : " + authService.registerUser(admin).getFcm_token());
 //			var worker = RegistrationDto.builder()
 //					.email("worker@example.com")
 //					.password("test")
 //					.role(WORKER)
+//					.site_id(0)
 //					.build();
 //			System.out.println("WORKER token : " + authService.registerUser(worker).getFcm_token());
 //		};
