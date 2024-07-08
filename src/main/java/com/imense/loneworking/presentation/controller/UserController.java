@@ -20,7 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("web/dashboard/usersDashboard/sites_id:{site_id}")
+    @GetMapping("web/dashboard/usersDashboard/site_id:{site_id}")
     public List<UserDashboardDto> getUsersForAuthenticatedUser(@PathVariable Long site_id) {
         return userService.getAllUsersForDashboard(site_id);
     }

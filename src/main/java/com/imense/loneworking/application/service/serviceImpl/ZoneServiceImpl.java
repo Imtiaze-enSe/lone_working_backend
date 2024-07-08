@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,22 +43,27 @@ public class ZoneServiceImpl implements ZoneService {
     public List<ZoneInfoDto> getSiteZoneInfo() {
         String username = getCurrentUsername();
         User user = userRepository.findByEmail(username);
-        Long siteId = user.getSiteId();
+        Tenant tenant = user.getTenant();
+        List<Site> sites = tenant.getSites();
 
-        List<Zone> zones = zoneRepository.findBySiteId(siteId);
+        List<ZoneInfoDto> zoneInfoDtos = new ArrayList<>();
 
-        return zones.stream().map(zone -> {
-            Site site = zone.getSite();
-            Tenant tenant = site.getTenant();
-            ZoneInfoDto dto = new ZoneInfoDto();
-            dto.setZone_id(zone.getId());
-            dto.setSiteName(site.getName());
-            dto.setZoneName(zone.getName());
-            dto.setCompanyName(tenant.getName());
-            dto.setZoneCreatedAt(zone.getCreated_at());
-            dto.setZonePlan(zone.getPlan());
-            return dto;
-        }).collect(Collectors.toList());
+        for (Site site : sites) {
+            List<Zone> zones = zoneRepository.findBySiteId(site.getId());
+            List<ZoneInfoDto> siteZones = zones.stream().map(zone -> {
+                ZoneInfoDto dto = new ZoneInfoDto();
+                dto.setZone_id(zone.getId());
+                dto.setSiteName(site.getName());
+                dto.setZoneName(zone.getName());
+                dto.setCompanyName(tenant.getName());
+                dto.setZoneCreatedAt(zone.getCreated_at());
+                dto.setZonePlan(zone.getPlan());
+                return dto;
+            }).toList();
+            zoneInfoDtos.addAll(siteZones);
+        }
+
+        return zoneInfoDtos;
     }
 
 
@@ -105,9 +111,6 @@ public class ZoneServiceImpl implements ZoneService {
 
     @Override
     public List<ZoneDashboardDto> getSiteZoneInfoDashboard(Long site_id) {
-        String username = getCurrentUsername();
-        User user = userRepository.findByEmail(username);
-
         List<Zone> zones = zoneRepository.findBySiteId(site_id);
 
         return zones.stream().map(zone -> {

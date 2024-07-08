@@ -45,10 +45,8 @@ public class SiteServiceImpl implements SiteService {
     public List<SiteInfoDto> getSiteInfo() {
         String username = getCurrentUsername();
         User authUser = userRepository.findByEmail(username);
-        Long siteId = authUser.getSiteId();
-        Optional<Site> site = siteRepository.findById(siteId);
-        Tenant tenant = site.get().getTenant();
-        List<Site> sites = siteRepository.findSitesByTenant_Id(tenant.getId());
+        Tenant tenant = authUser.getTenant();
+        List<Site> sites = tenant.getSites();
 
         return sites.stream().filter(Objects::nonNull)
                 .map(thisSite -> {
