@@ -11,7 +11,7 @@ import com.imense.loneworking.domain.entity.Zone;
 import java.util.List;
 
 public interface UserService {
-    List<UserDashboardDto> getAllUsersForDashboard();
+    List<UserDashboardDto> getAllUsersForDashboard(Long site_id);
     List<WorkerInfoDto> getAllUsersForTable();
     User addZone(WorkerCreationDto workerCreationDto);
 }

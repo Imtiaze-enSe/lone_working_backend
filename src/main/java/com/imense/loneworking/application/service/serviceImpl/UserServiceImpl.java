@@ -36,12 +36,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDashboardDto> getAllUsersForDashboard() {
-        String username = getCurrentUsername();
-        User authUser = userRepository.findByEmail(username);
-        Tenant tenant = authUser.getTenant();
-        List<User> users = tenant.getUsers();
-        System.out.println(users);
+    public List<UserDashboardDto> getAllUsersForDashboard(Long site_id) {
+        List<User> users = userRepository.findBySiteId(site_id);
         return users.stream().map(user -> {
             UserDashboardDto userDto = new UserDashboardDto();
             userDto.setId(user.getId());
@@ -63,8 +59,8 @@ public class UserServiceImpl implements UserService {
     public List<WorkerInfoDto> getAllUsersForTable() {
         String username = getCurrentUsername();
         User authUser = userRepository.findByEmail(username);
-        Long siteId = authUser.getSiteId();
-        List<User> users = userRepository.findBySiteId(siteId);
+        Tenant tenant = authUser.getTenant();
+        List<User> users = tenant.getUsers();
         return users.stream().map(user -> {
             WorkerInfoDto workerDto = new WorkerInfoDto();
             workerDto.setId(user.getId());

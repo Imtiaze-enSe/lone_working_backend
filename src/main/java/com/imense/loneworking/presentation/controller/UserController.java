@@ -5,6 +5,7 @@ import com.imense.loneworking.application.dto.Dashboard.UserDashboardDto;
 import com.imense.loneworking.application.dto.Worker.WorkerInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,9 +20,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("web/dashboard/usersDashboard")
-    public List<UserDashboardDto> getUsersForAuthenticatedUser() {
-        return userService.getAllUsersForDashboard();
+    @GetMapping("web/dashboard/usersDashboard/sites_id:{site_id}")
+    public List<UserDashboardDto> getUsersForAuthenticatedUser(@PathVariable Long site_id) {
+        return userService.getAllUsersForDashboard(site_id);
     }
 
     @GetMapping("web/workers")
