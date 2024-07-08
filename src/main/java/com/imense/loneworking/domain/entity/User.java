@@ -37,7 +37,7 @@ public class User implements UserDetails {
     private Boolean terms_accepted;
     private Long function_id;
     private Long report_to;
-    private Boolean status;
+    private String status;
     private Boolean ppe_status;
     private String email;
     private Date email_verified_at;
