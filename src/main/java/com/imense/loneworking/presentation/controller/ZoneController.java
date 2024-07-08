@@ -39,8 +39,8 @@ public class ZoneController {
         zoneService.deleteZone(id);
     }
 
-    @GetMapping("web/dashboard/zones")
-    public List<ZoneDashboardDto> getSiteZoneInfoDashboard() {
-        return zoneService.getSiteZoneInfoDashboard();
+    @GetMapping("web/dashboard/zones/{site_id}")
+    public List<ZoneDashboardDto> getSiteZoneInfoDashboard(@PathVariable Long site_id) {
+        return zoneService.getSiteZoneInfoDashboard(site_id);
     }
 }

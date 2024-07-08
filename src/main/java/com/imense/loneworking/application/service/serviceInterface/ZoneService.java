@@ -14,5 +14,5 @@ public interface ZoneService {
     Zone updateZone(Long zoneId, ZoneUpdateDto zneUpdateDto);
     void deleteZone(Long zoneId);
 
-    List<ZoneDashboardDto> getSiteZoneInfoDashboard();
+    List<ZoneDashboardDto> getSiteZoneInfoDashboard(Long site_id);
 }
