@@ -49,7 +49,7 @@ public class ZoneServiceImpl implements ZoneService {
         List<ZoneInfoDto> zoneInfoDtos = new ArrayList<>();
 
         for (Site site : sites) {
-            List<Zone> zones = zoneRepository.findBySiteId(site.getId());
+            List<Zone> zones = site.getZones();
             List<ZoneInfoDto> siteZones = zones.stream().map(zone -> {
                 ZoneInfoDto dto = new ZoneInfoDto();
                 dto.setZone_id(zone.getId());
@@ -62,7 +62,6 @@ public class ZoneServiceImpl implements ZoneService {
             }).toList();
             zoneInfoDtos.addAll(siteZones);
         }
-
         return zoneInfoDtos;
     }
 
