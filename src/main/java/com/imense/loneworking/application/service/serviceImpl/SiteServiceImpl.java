@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -47,18 +48,18 @@ public class SiteServiceImpl implements SiteService {
         Long siteId = authUser.getSiteId();
         Optional<Site> site = siteRepository.findById(siteId);
         Tenant tenant = site.get().getTenant();
-        Integer NbrZones = zoneRepository.countZoneBySite(site);
         List<Site> sites = siteRepository.findSitesByTenant_Id(tenant.getId());
 
-        return sites.stream()
+        return sites.stream().filter(Objects::nonNull)
                 .map(thisSite -> {
+                    Integer NbrZones = zoneRepository.countZoneBySite(Optional.of(thisSite));
                     SiteInfoDto dto = new SiteInfoDto();
                     dto.setSite_id(thisSite.getId());
-                    dto.setSiteName(site.get().getName());
-                    dto.setCompanyName(site.get().getTenant().getName());
-                    dto.setLocation(site.get().getLocation());
+                    dto.setSiteName(thisSite.getName());
+                    dto.setCompanyName(thisSite.getTenant().getName());
+                    dto.setLocation(thisSite.getLocation());
                     dto.setNbrZones(NbrZones);
-                    dto.setSiteCreatedAt(site.get().getCreated_at());
+                    dto.setSiteCreatedAt(thisSite.getCreated_at());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -121,8 +122,8 @@ public class SiteServiceImpl implements SiteService {
                 .map(thisSite -> {
                     SiteDashboardDto dto = new SiteDashboardDto();
                     dto.setId(thisSite.getId());
-                    dto.setName(site.get().getName());
-                    dto.setPlan(site.get().getPlan2d());
+                    dto.setName(thisSite.getName());
+                    dto.setPlan(thisSite.getPlan2d());
                     return dto;
                 })
                 .collect(Collectors.toList());
