@@ -114,7 +114,7 @@ public class SiteServiceImpl implements SiteService {
         String username = getCurrentUsername();
         User authUser = userRepository.findByEmail(username);
         Tenant tenant = authUser.getTenant();
-        List<Site> sites = siteRepository.findSitesByTenant_Id(tenant.getId());
+        List<Site> sites = tenant.getSites();
 
         return sites.stream()
                 .map(thisSite -> {
