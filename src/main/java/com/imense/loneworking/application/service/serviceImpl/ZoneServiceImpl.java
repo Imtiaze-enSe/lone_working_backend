@@ -1,9 +1,10 @@
 package com.imense.loneworking.application.service.serviceImpl;
 
-import com.imense.loneworking.application.dto.ZoneCreationDto;
-import com.imense.loneworking.application.dto.ZoneInfoDto;
-import com.imense.loneworking.application.dto.ZoneUpdateDto;
-import com.imense.loneworking.application.service.serviceInterface.ZoneInfoService;
+import com.imense.loneworking.application.dto.Dashboard.ZoneDashboardDto;
+import com.imense.loneworking.application.dto.Zone.ZoneCreationDto;
+import com.imense.loneworking.application.dto.Zone.ZoneInfoDto;
+import com.imense.loneworking.application.dto.Zone.ZoneUpdateDto;
+import com.imense.loneworking.application.service.serviceInterface.ZoneService;
 import com.imense.loneworking.domain.entity.Site;
 import com.imense.loneworking.domain.entity.Tenant;
 import com.imense.loneworking.domain.entity.User;
@@ -20,16 +21,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ZoneInfoServiceImpl implements ZoneInfoService {
+public class ZoneServiceImpl implements ZoneService {
 
     private final ZoneRepository zoneRepository;
     private final UserRepository userRepository;
     private final SiteRepository siteRepository;
 
-    public ZoneInfoServiceImpl(ZoneRepository zoneRepository, UserRepository userRepository, SiteRepository siteRepository) {
+    public ZoneServiceImpl(ZoneRepository zoneRepository, UserRepository userRepository, SiteRepository siteRepository) {
         this.zoneRepository = zoneRepository;
         this.userRepository = userRepository;
         this.siteRepository = siteRepository;
+    }
+
+    private String getCurrentUsername() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails.getUsername();
     }
 
     @Override
@@ -54,10 +60,6 @@ public class ZoneInfoServiceImpl implements ZoneInfoService {
         }).collect(Collectors.toList());
     }
 
-    private String getCurrentUsername() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userDetails.getUsername();
-    }
 
     @Override
     public Zone addZone(ZoneCreationDto zoneCreationDto) {
@@ -100,5 +102,24 @@ public class ZoneInfoServiceImpl implements ZoneInfoService {
         Zone zone = zoneRepository.findById(zoneId)
                 .orElseThrow(() -> new RuntimeException("Zone not found"));
         zoneRepository.delete(zone);
+    }
+
+    @Override
+    public List<ZoneDashboardDto> getSiteZoneInfoDashboard() {
+        String username = getCurrentUsername();
+        User user = userRepository.findByEmail(username);
+        Long siteId = user.getSiteId();
+
+        List<Zone> zones = zoneRepository.findBySiteId(siteId);
+
+        return zones.stream().map(zone -> {
+            Site site = zone.getSite();
+            ZoneDashboardDto dto = new ZoneDashboardDto();
+            dto.setId(zone.getId());
+            dto.setName(zone.getName());
+            dto.setSite_id(site.getId());
+            dto.setPlan(zone.getPlan());
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

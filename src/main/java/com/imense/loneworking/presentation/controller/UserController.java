@@ -1,7 +1,8 @@
 package com.imense.loneworking.presentation.controller;
 
 
-import com.imense.loneworking.application.dto.UserDashboardDto;
+import com.imense.loneworking.application.dto.Dashboard.UserDashboardDto;
+import com.imense.loneworking.application.dto.Worker.WorkerInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +18,15 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    @GetMapping("web/dashboard/users")
+
+    @GetMapping("web/dashboard/usersDashboard")
     public List<UserDashboardDto> getUsersForAuthenticatedUser() {
-        return userService.getAllUsers();
+        return userService.getAllUsersForDashboard();
     }
+
+    @GetMapping("web/workers")
+    public List<WorkerInfoDto> getAllUsersForTable() {
+        return userService.getAllUsersForTable();
+    }
+
 }

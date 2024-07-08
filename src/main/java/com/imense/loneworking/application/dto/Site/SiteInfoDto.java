@@ -1,4 +1,4 @@
-package com.imense.loneworking.application.dto;
+package com.imense.loneworking.application.dto.Site;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

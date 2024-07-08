@@ -1,4 +1,5 @@
-package com.imense.loneworking.application.dto;
+package com.imense.loneworking.application.dto.Zone;
+
 
 import lombok.Data;
 import lombok.Getter;
@@ -8,10 +9,9 @@ import org.locationtech.jts.geom.Geometry;
 @Data
 @Getter
 @Setter
-public class ZoneUpdateDto {
-    private String zoneNumber;
+public class ZoneCreationDto {
     private String zoneName;
-    private Boolean zoneStatus;
-    private Geometry ZonePlan;
     private String siteName;
+    private Geometry planZone;
+
 }

@@ -1,4 +1,4 @@
-package com.imense.loneworking.application.dto;
+package com.imense.loneworking.application.dto.Dashboard;
 
 import com.bedatadriven.jackson.datatype.jts.serialization.GeometryDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

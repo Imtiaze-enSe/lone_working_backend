@@ -55,6 +55,17 @@ public class User implements UserDetails {
     private String zone;
     private String level;
     private String room;
+    private String address;
+    private String contact_person;
+    private String contact_person_phone;
+    private String department;
+
+    // health info
+    private String blood_type;
+    private String diseases;
+    private String medications;
+    private Boolean alcoholic;
+    private Boolean smoking;
 
     @ManyToOne
     @JoinColumn(name = "tenant_id")

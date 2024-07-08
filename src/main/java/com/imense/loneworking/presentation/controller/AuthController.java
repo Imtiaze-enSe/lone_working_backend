@@ -1,10 +1,9 @@
 package com.imense.loneworking.presentation.controller;
 
-import com.imense.loneworking.application.dto.LoginDto;
-import com.imense.loneworking.application.dto.RegistrationDto;
+import com.imense.loneworking.application.dto.Authentification.LoginDto;
+import com.imense.loneworking.application.dto.Authentification.RegistrationDto;
 import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.application.service.serviceInterface.AuthService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

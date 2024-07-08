@@ -1,7 +1,7 @@
 package com.imense.loneworking.application.service.serviceInterface;
 
-import com.imense.loneworking.application.dto.RegistrationDto;
-import com.imense.loneworking.application.dto.LoginDto;
+import com.imense.loneworking.application.dto.Authentification.RegistrationDto;
+import com.imense.loneworking.application.dto.Authentification.LoginDto;
 import com.imense.loneworking.domain.entity.User;
 
 public interface AuthService {

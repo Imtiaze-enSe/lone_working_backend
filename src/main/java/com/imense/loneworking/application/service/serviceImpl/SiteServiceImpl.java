@@ -1,7 +1,8 @@
 package com.imense.loneworking.application.service.serviceImpl;
 
-import com.imense.loneworking.application.dto.SiteCreationDto;
-import com.imense.loneworking.application.dto.SiteInfoDto;
+import com.imense.loneworking.application.dto.Dashboard.SiteDashboardDto;
+import com.imense.loneworking.application.dto.Site.SiteCreationDto;
+import com.imense.loneworking.application.dto.Site.SiteInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.SiteService;
 import com.imense.loneworking.domain.entity.Site;
 import com.imense.loneworking.domain.entity.Tenant;
@@ -106,5 +107,25 @@ public class SiteServiceImpl implements SiteService {
         siteRepository.deleteById(siteId);
     }
 
+
+    @Override
+    public List<SiteDashboardDto> getSiteInfoDashboard(){
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        Long siteId = authUser.getSiteId();
+        Optional<Site> site = siteRepository.findById(siteId);
+        Tenant tenant = site.get().getTenant();
+        List<Site> sites = siteRepository.findSitesByTenant_Id(tenant.getId());
+
+        return sites.stream()
+                .map(thisSite -> {
+                    SiteDashboardDto dto = new SiteDashboardDto();
+                    dto.setId(siteId);
+                    dto.setName(site.get().getName());
+                    dto.setPlan(site.get().getPlan2d());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 
 }

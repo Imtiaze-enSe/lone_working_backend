@@ -1,4 +1,4 @@
-package com.imense.loneworking.application.dto;
+package com.imense.loneworking.application.dto.Site;
 
 import lombok.Data;
 import lombok.Getter;

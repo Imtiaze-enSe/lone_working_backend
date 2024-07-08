@@ -1,4 +1,4 @@
-package com.imense.loneworking.application.dto;
+package com.imense.loneworking.application.dto.Zone;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;

@@ -1,4 +1,4 @@
-package com.imense.loneworking.application.dto;
+package com.imense.loneworking.application.dto.Authentification;
 
 import lombok.Getter;
 import lombok.Setter;
