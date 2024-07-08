@@ -67,7 +67,6 @@ public class ZoneServiceImpl implements ZoneService {
         if (site == null) {
             throw new RuntimeException("Site not found");
         }
-
         Zone zone = new Zone();
         zone.setName(zoneCreationDto.getZoneName());
         System.out.println(zoneCreationDto.getPlanZone());
