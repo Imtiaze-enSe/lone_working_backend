@@ -105,12 +105,11 @@ public class ZoneServiceImpl implements ZoneService {
     }
 
     @Override
-    public List<ZoneDashboardDto> getSiteZoneInfoDashboard() {
+    public List<ZoneDashboardDto> getSiteZoneInfoDashboard(Long site_id) {
         String username = getCurrentUsername();
         User user = userRepository.findByEmail(username);
-        Long siteId = user.getSiteId();
 
-        List<Zone> zones = zoneRepository.findBySiteId(siteId);
+        List<Zone> zones = zoneRepository.findBySiteId(site_id);
 
         return zones.stream().map(zone -> {
             Site site = zone.getSite();
