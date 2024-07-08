@@ -1,8 +1,10 @@
 package com.imense.loneworking.application.service.serviceImpl;
 
 import com.imense.loneworking.application.dto.Dashboard.UserDashboardDto;
+import com.imense.loneworking.application.dto.Worker.WorkerCreationDto;
 import com.imense.loneworking.application.dto.Worker.WorkerInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.UserService;
+import com.imense.loneworking.domain.entity.Site;
 import com.imense.loneworking.domain.entity.Tenant;
 import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.domain.repository.SiteRepository;
@@ -13,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,5 +93,32 @@ public class UserServiceImpl implements UserService {
 
             return workerDto;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public User addZone(WorkerCreationDto workerCreationDto) {
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        Long siteId = authUser.getSiteId();
+        Optional<Site> thisSite = siteRepository.findById(siteId);
+        Tenant tenant =  tenantRepository.findByName(thisSite.get().getTenant().getName());
+        Site site = siteRepository.findByName(workerCreationDto.getLinked_to());
+        if (site == null) {
+            throw new RuntimeException("Site not found");
+        }
+        User user = new User();
+        user.setSiteId(site.getId());
+        user.setFirst_name(workerCreationDto.getFirst_name());
+        user.setLast_name(workerCreationDto.getLast_name());
+        user.setProfile_photo(workerCreationDto.getProfile_photo());
+        user.setEmail(workerCreationDto.getEmail());
+        user.setPassword(workerCreationDto.getPassword());
+        user.setPhone(workerCreationDto.getPhone());
+        user.setTenant(tenant);
+        user.setSiteId(Long.valueOf(workerCreationDto.getLinked_to()));
+        user.setDepartment(workerCreationDto.getDepartment());
+        user.setFunction(workerCreationDto.getFunction());
+
+        return user;
     }
 }

@@ -59,6 +59,7 @@ public class User implements UserDetails {
     private String contact_person;
     private String contact_person_phone;
     private String department;
+    private String function;
 
     // health info
     private String blood_type;
@@ -66,6 +67,7 @@ public class User implements UserDetails {
     private String medications;
     private Boolean alcoholic;
     private Boolean smoking;
+
 
     @ManyToOne
     @JoinColumn(name = "tenant_id")
