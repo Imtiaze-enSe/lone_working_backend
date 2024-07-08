@@ -53,7 +53,7 @@ public class SiteServiceImpl implements SiteService {
         return sites.stream()
                 .map(thisSite -> {
                     SiteInfoDto dto = new SiteInfoDto();
-                    dto.setSite_id(siteId);
+                    dto.setSite_id(thisSite.getId());
                     dto.setSiteName(site.get().getName());
                     dto.setCompanyName(site.get().getTenant().getName());
                     dto.setLocation(site.get().getLocation());
@@ -120,7 +120,7 @@ public class SiteServiceImpl implements SiteService {
         return sites.stream()
                 .map(thisSite -> {
                     SiteDashboardDto dto = new SiteDashboardDto();
-                    dto.setId(siteId);
+                    dto.setId(thisSite.getId());
                     dto.setName(site.get().getName());
                     dto.setPlan(site.get().getPlan2d());
                     return dto;
