@@ -3,8 +3,10 @@ package com.imense.loneworking.application.service.serviceImpl;
 import com.imense.loneworking.application.dto.Dashboard.UserDashboardDto;
 import com.imense.loneworking.application.dto.Worker.WorkerInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.UserService;
+import com.imense.loneworking.domain.entity.Tenant;
 import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.domain.repository.SiteRepository;
+import com.imense.loneworking.domain.repository.TenantRepository;
 import com.imense.loneworking.domain.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,10 +19,13 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final SiteRepository siteRepository;
+    private final TenantRepository tenantRepository;
 
-    public UserServiceImpl(UserRepository userRepository, SiteRepository siteRepository) {
+    public UserServiceImpl(UserRepository userRepository, SiteRepository siteRepository,
+                           TenantRepository tenantRepository) {
         this.userRepository = userRepository;
         this.siteRepository = siteRepository;
+        this.tenantRepository = tenantRepository;
     }
     private String getCurrentUsername() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -31,8 +36,8 @@ public class UserServiceImpl implements UserService {
     public List<UserDashboardDto> getAllUsersForDashboard() {
         String username = getCurrentUsername();
         User authUser = userRepository.findByEmail(username);
-        Long siteId = authUser.getSiteId();
-        List<User> users = userRepository.findBySiteId(siteId);
+        Tenant tenant = authUser.getTenant();
+        List<User> users = tenant.getUsers();
         System.out.println(users);
         return users.stream().map(user -> {
             UserDashboardDto userDto = new UserDashboardDto();
