@@ -89,11 +89,11 @@ public class ZoneServiceImpl implements ZoneService {
         if (site == null) {
             throw new RuntimeException("Site not found");
         }
-
+        System.out.println(zoneUpdateDto.getPlanZone());
         Zone zone = zoneRepository.findById(zoneId)
                 .orElseThrow(() -> new RuntimeException("Zone not found"));
 
-        zone.setPlan(zoneUpdateDto.getZonePlan());
+        zone.setPlan(zoneUpdateDto.getPlanZone());
         zone.setName(zoneUpdateDto.getZoneName());
         zone.setStatus(zoneUpdateDto.getZoneStatus());
         zone.setNumber(zoneUpdateDto.getZoneNumber());

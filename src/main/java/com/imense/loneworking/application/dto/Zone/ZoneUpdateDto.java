@@ -12,6 +12,6 @@ public class ZoneUpdateDto {
     private String zoneNumber;
     private String zoneName;
     private Boolean zoneStatus;
-    private Geometry ZonePlan;
+    private Geometry planZone;
     private String siteName;
 }

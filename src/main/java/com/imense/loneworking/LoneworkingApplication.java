@@ -1,7 +1,14 @@
 package com.imense.loneworking;
 
+import com.imense.loneworking.application.dto.Authentification.RegistrationDto;
+import com.imense.loneworking.application.service.serviceInterface.AuthService;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import static com.imense.loneworking.domain.entity.Enum.UserRole.ADMIN;
+import static com.imense.loneworking.domain.entity.Enum.UserRole.WORKER;
 
 @SpringBootApplication
 public class LoneworkingApplication {
