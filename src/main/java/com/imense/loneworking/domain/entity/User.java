@@ -1,5 +1,6 @@
 package com.imense.loneworking.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.imense.loneworking.domain.entity.Enum.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -70,6 +71,7 @@ public class User implements UserDetails {
 
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "tenant_id")
     private Tenant tenant;
 

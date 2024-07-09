@@ -13,5 +13,7 @@ import java.util.List;
 public interface UserService {
     List<UserDashboardDto> getAllUsersForDashboard(Long site_id);
     List<WorkerInfoDto> getAllUsersForTable();
-    User addZone(WorkerCreationDto workerCreationDto);
+    User addWorker(WorkerCreationDto workerCreationDto);
+    User updateWorker(Long id, WorkerCreationDto workerCreationDto);
+    void deleteWorker(Long workerId);
 }

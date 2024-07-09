@@ -2,12 +2,14 @@ package com.imense.loneworking.presentation.controller;
 
 
 import com.imense.loneworking.application.dto.Dashboard.UserDashboardDto;
+import com.imense.loneworking.application.dto.Worker.WorkerCreationDto;
 import com.imense.loneworking.application.dto.Worker.WorkerInfoDto;
+import com.imense.loneworking.application.dto.Zone.ZoneCreationDto;
+import com.imense.loneworking.application.dto.Zone.ZoneUpdateDto;
 import com.imense.loneworking.application.service.serviceInterface.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.imense.loneworking.domain.entity.User;
+import com.imense.loneworking.domain.entity.Zone;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,4 +32,16 @@ public class UserController {
         return userService.getAllUsersForTable();
     }
 
+    @PostMapping("web/worker")
+    public User addZone(@RequestBody WorkerCreationDto workerCreationDto) {
+        return userService.addWorker(workerCreationDto);
+    }
+    @PutMapping("web/worker/{id}")
+    public User updateZone(@PathVariable Long id, @RequestBody WorkerCreationDto workerCreationDto) {
+        return userService.updateWorker(id, workerCreationDto);
+    }
+    @DeleteMapping("web/worker/{id}")
+    public void deleteWorker(@PathVariable Long id) {
+        userService.deleteWorker(id);
+    }
 }

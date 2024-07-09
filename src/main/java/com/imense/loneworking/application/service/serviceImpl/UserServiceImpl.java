@@ -7,28 +7,34 @@ import com.imense.loneworking.application.service.serviceInterface.UserService;
 import com.imense.loneworking.domain.entity.Site;
 import com.imense.loneworking.domain.entity.Tenant;
 import com.imense.loneworking.domain.entity.User;
+import com.imense.loneworking.domain.entity.Zone;
 import com.imense.loneworking.domain.repository.SiteRepository;
 import com.imense.loneworking.domain.repository.TenantRepository;
 import com.imense.loneworking.domain.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.imense.loneworking.domain.entity.Enum.UserRole.WORKER;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final SiteRepository siteRepository;
     private final TenantRepository tenantRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, SiteRepository siteRepository,
-                           TenantRepository tenantRepository) {
+                           TenantRepository tenantRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.siteRepository = siteRepository;
         this.tenantRepository = tenantRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     private String getCurrentUsername() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -92,12 +98,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addZone(WorkerCreationDto workerCreationDto) {
+    public User addWorker(WorkerCreationDto workerCreationDto) {
         String username = getCurrentUsername();
         User authUser = userRepository.findByEmail(username);
         Long siteId = authUser.getSiteId();
         Optional<Site> thisSite = siteRepository.findById(siteId);
-        Tenant tenant =  tenantRepository.findByName(thisSite.get().getTenant().getName());
+        Tenant tenant =  thisSite.get().getTenant();
         Site site = siteRepository.findByName(workerCreationDto.getLinked_to());
         if (site == null) {
             throw new RuntimeException("Site not found");
@@ -108,13 +114,47 @@ public class UserServiceImpl implements UserService {
         user.setLast_name(workerCreationDto.getLast_name());
         user.setProfile_photo(workerCreationDto.getProfile_photo());
         user.setEmail(workerCreationDto.getEmail());
-        user.setPassword(workerCreationDto.getPassword());
+        user.setPassword(passwordEncoder.encode(workerCreationDto.getPassword()));
         user.setPhone(workerCreationDto.getPhone());
         user.setTenant(tenant);
-        user.setSiteId(Long.valueOf(workerCreationDto.getLinked_to()));
         user.setDepartment(workerCreationDto.getDepartment());
         user.setFunction(workerCreationDto.getFunction());
 
-        return user;
+        user.setRole(WORKER);
+
+        return userRepository.save(user);
     }
+
+    @Override
+    public User updateWorker(Long id, WorkerCreationDto workerCreationDto) {
+
+        Site site = siteRepository.findByName(workerCreationDto.getLinked_to());
+        if (site == null) {
+            throw new RuntimeException("Site not found");
+        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setFirst_name(workerCreationDto.getFirst_name());
+        user.setLast_name(workerCreationDto.getLast_name());
+        user.setProfile_photo(workerCreationDto.getProfile_photo());
+        user.setEmail(workerCreationDto.getEmail());
+        user.setPassword(passwordEncoder.encode(workerCreationDto.getPassword()));
+        user.setPhone(workerCreationDto.getPhone());
+        user.setDepartment(workerCreationDto.getDepartment());
+        user.setFunction(workerCreationDto.getFunction());
+
+        user.setRole(WORKER);
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteWorker(Long workerId) {
+        User user = userRepository.findById(workerId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
+    }
+
+
 }

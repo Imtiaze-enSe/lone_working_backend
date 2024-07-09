@@ -1,5 +1,6 @@
 package com.imense.loneworking.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.imense.loneworking.domain.entity.Enum.TenantsPresentationTypeEnum;
 import com.imense.loneworking.domain.entity.Enum.TenantsTypeEnum;
 import jakarta.persistence.*;
@@ -56,6 +57,7 @@ public class Tenant {
     private List<Site> sites;
 
     @OneToMany(mappedBy = "tenant")
+    @JsonManagedReference
     private List<User> users;
 
 }

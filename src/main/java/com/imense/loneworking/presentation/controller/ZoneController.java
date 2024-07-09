@@ -30,6 +30,7 @@ public class ZoneController {
     public Zone addZone(@RequestBody ZoneCreationDto zoneCreationDto) {
         return zoneService.addZone(zoneCreationDto);
     }
+
     @PutMapping("web/zone/{id}")
     public Zone updateZone(@PathVariable Long id, @RequestBody ZoneUpdateDto zoneUpdateDto) {
         return zoneService.updateZone(id, zoneUpdateDto);
