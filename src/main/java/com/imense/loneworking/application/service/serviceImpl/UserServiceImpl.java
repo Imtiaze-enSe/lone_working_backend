@@ -73,6 +73,7 @@ public class UserServiceImpl implements UserService {
             workerDto.setProfile_photo(user.getProfile_photo());
             workerDto.setFirst_name(user.getFirst_name());
             workerDto.setLast_name(user.getLast_name());
+            workerDto.setEmail(user.getEmail());
             workerDto.setPhone(user.getPhone());
             workerDto.setCompany(user.getTenant().getName());
             workerDto.setLinked_to(siteRepository.findById(user.getSiteId()).get().getName());

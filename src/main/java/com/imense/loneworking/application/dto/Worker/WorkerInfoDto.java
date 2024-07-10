@@ -32,9 +32,7 @@ public class WorkerInfoDto {
     private String contact_person_phone;
     private String contact_person;
     private String report_to;
-
     // health info
-
     private String blood_type;
     private String diseases;
     private String medications;
