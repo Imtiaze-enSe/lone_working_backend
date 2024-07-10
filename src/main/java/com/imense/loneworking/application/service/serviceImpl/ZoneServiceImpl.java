@@ -1,6 +1,7 @@
 package com.imense.loneworking.application.service.serviceImpl;
 
 import com.imense.loneworking.application.dto.Dashboard.ZoneDashboardDto;
+import com.imense.loneworking.application.dto.Qrcode.ZoneQrCodeDto;
 import com.imense.loneworking.application.dto.Zone.ZoneCreationDto;
 import com.imense.loneworking.application.dto.Zone.ZoneInfoDto;
 import com.imense.loneworking.application.dto.Zone.ZoneUpdateDto;
@@ -121,5 +122,18 @@ public class ZoneServiceImpl implements ZoneService {
             dto.setPlan(zone.getPlan());
             return dto;
         }).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<ZoneQrCodeDto> getZoneInfoQrCode(Long site_id) {
+        List<Zone> zones = zoneRepository.findBySiteId(site_id);
+        return zones.stream().map(zone -> {
+            ZoneQrCodeDto dto=new ZoneQrCodeDto();
+            dto.setZone_id(zone.getId());
+            dto.setZoneName(zone.getName());
+            return dto;
+        }).collect(Collectors.toList());
+
     }
 }

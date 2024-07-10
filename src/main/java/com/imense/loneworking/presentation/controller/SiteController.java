@@ -1,6 +1,7 @@
 package com.imense.loneworking.presentation.controller;
 
 import com.imense.loneworking.application.dto.Dashboard.SiteDashboardDto;
+import com.imense.loneworking.application.dto.Qrcode.SiteQrCodeDto;
 import com.imense.loneworking.application.dto.Site.SiteCreationDto;
 import com.imense.loneworking.application.dto.Site.SiteInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.SiteService;
@@ -42,4 +43,7 @@ public class SiteController {
     public List<SiteDashboardDto> getSiteInfoDashboard() {
         return siteService.getSiteInfoDashboard();
     }
+
+    @GetMapping("web/qrCode/sites")
+    public List<SiteQrCodeDto> getSiteInfoQrCode(){return siteService.getSiteInfoQrCode();}
 }
