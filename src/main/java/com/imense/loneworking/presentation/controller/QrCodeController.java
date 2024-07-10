@@ -25,5 +25,13 @@ public class QrCodeController {
         return qrcodeService.getAllQrCodes();
     }
 
+    @DeleteMapping("web/qrCode/{id}")
+    public void deleteQrCode(@PathVariable Long id){qrcodeService.deleteQrCode(id);}
+
+    @PutMapping("web/qrCode/{id}")
+    public QrCode updateQrCode(@PathVariable Long id,@RequestBody QrcodeCreationDto qrcodeCreationDto){
+        return qrcodeService.updateQrCode(id,qrcodeCreationDto);
+    }
+
 
 }

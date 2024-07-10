@@ -2,7 +2,6 @@ package com.imense.loneworking.application.service.serviceImpl;
 
 import com.imense.loneworking.application.dto.Qrcode.QrcodeCreationDto;
 import com.imense.loneworking.application.dto.Qrcode.QrcodeInfoDto;
-import com.imense.loneworking.application.dto.Zone.ZoneInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.QrcodeService;
 import com.imense.loneworking.domain.entity.*;
 import com.imense.loneworking.domain.repository.*;
@@ -110,6 +109,50 @@ public class QrcodeServiceImpl implements QrcodeService {
         return qrcodeInfoDtos;
     }
 
+    @Override
+    public void deleteQrCode(Long qrCodeId) {
+        QrCode qrCode=qrCodeRepository.findById(qrCodeId)
+                .orElseThrow(() -> new RuntimeException("QrCode not found"));
+        qrCodeRepository.delete(qrCode);
+    }
+
+    @Override
+    public QrCode updateQrCode(Long qrCodeId, QrcodeCreationDto qrcodeCreationDto) {
+
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        Tenant tenant = authUser.getTenant();
+        List<Site> sites = tenant.getSites();
+
+        QrCode qrCode=qrCodeRepository.findById(qrCodeId).orElseThrow(() -> new RuntimeException("QrCode not found"));
+        long siteId = qrcodeCreationDto.getSiteId();
+        Site site = sites.stream()
+                .filter(s -> s.getId() == siteId)
+                .findFirst()
+                .orElse(null);
+        if (site == null) {
+            throw new RuntimeException("Site not found");
+        }
+
+        long zoneId = qrcodeCreationDto.getZoneId();
+        List<Zone> zones = zoneRepository.findBySiteId(site.getId());
+        Zone zone = zones.stream()
+                .filter(z -> z.getId() == zoneId)
+                .findFirst()
+                .orElse(null);
+        if (zone == null) {
+            throw new RuntimeException("Zone not found");
+        }
+
+        qrCode.setZone(zone);
+        qrCode.setInterior(qrcodeCreationDto.getInterior());
+        qrCode.setLevel(qrcodeCreationDto.getLevel());
+        qrCode.setRoom(qrcodeCreationDto.getRoom());
+        qrCode.setQr_code_position(qrcodeCreationDto.getQr_code_position());
+        qrCode.setQr_code_upatedAt(LocalDateTime.now());
+        return qrCodeRepository.save(qrCode);
+
+    }
 }
 
 

@@ -11,4 +11,6 @@ public interface QrcodeService {
     QrCode addQrcode(QrcodeCreationDto qrcodeCreationDto);
 
     List<QrcodeInfoDto> getAllQrCodes();
+    void deleteQrCode(Long qrCodeId);
+    QrCode updateQrCode(Long qrCodeId,QrcodeCreationDto qrcodeCreationDto);
 }
