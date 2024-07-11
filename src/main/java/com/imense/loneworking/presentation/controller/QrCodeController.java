@@ -1,5 +1,6 @@
 package com.imense.loneworking.presentation.controller;
 
+import com.imense.loneworking.application.dto.Qrcode.QrcodeAndZoneInfoDto;
 import com.imense.loneworking.application.dto.Qrcode.QrcodeCreationDto;
 import com.imense.loneworking.application.dto.Qrcode.QrcodeInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.QrcodeService;
@@ -32,6 +33,9 @@ public class QrCodeController {
     public QrCode updateQrCode(@PathVariable Long id,@RequestBody QrcodeCreationDto qrcodeCreationDto){
         return qrcodeService.updateQrCode(id,qrcodeCreationDto);
     }
-
+@GetMapping("web/qrCode/qrAndZoneinfo/{id}")
+    public QrcodeAndZoneInfoDto getQrcodeAndZoneInfoDto(@PathVariable Long id){
+        return qrcodeService.getQrcodeAndZoneInfoDto(id);
+}
 
 }

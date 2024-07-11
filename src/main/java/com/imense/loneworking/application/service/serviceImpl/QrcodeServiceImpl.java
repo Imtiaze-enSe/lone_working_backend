@@ -1,5 +1,6 @@
 package com.imense.loneworking.application.service.serviceImpl;
 
+import com.imense.loneworking.application.dto.Qrcode.QrcodeAndZoneInfoDto;
 import com.imense.loneworking.application.dto.Qrcode.QrcodeCreationDto;
 import com.imense.loneworking.application.dto.Qrcode.QrcodeInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.QrcodeService;
@@ -152,6 +153,18 @@ public class QrcodeServiceImpl implements QrcodeService {
         qrCode.setQr_code_upatedAt(LocalDateTime.now());
         return qrCodeRepository.save(qrCode);
 
+    }
+
+    @Override
+    public QrcodeAndZoneInfoDto getQrcodeAndZoneInfoDto(Long qrCodeId) {
+        QrCode qrCode=qrCodeRepository.findById(qrCodeId).orElseThrow(() -> new RuntimeException("QrCode not found"));
+        QrcodeAndZoneInfoDto qrcodeAndZoneInfoDto=new QrcodeAndZoneInfoDto();
+        qrcodeAndZoneInfoDto.setGeocoordinates(qrCode.getQr_code_position());
+        qrcodeAndZoneInfoDto.setZoneId(qrCode.getZone().getId());
+        qrcodeAndZoneInfoDto.setRoom(qrCode.getRoom());
+        qrcodeAndZoneInfoDto.setLevel(qrCode.getLevel());
+        qrcodeAndZoneInfoDto.setInterior(qrCode.getInterior());
+        return qrcodeAndZoneInfoDto;
     }
 }
 

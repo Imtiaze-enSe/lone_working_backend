@@ -1,5 +1,6 @@
 package com.imense.loneworking.application.service.serviceInterface;
 
+import com.imense.loneworking.application.dto.Qrcode.QrcodeAndZoneInfoDto;
 import com.imense.loneworking.application.dto.Qrcode.QrcodeCreationDto;
 import com.imense.loneworking.application.dto.Qrcode.QrcodeInfoDto;
 import com.imense.loneworking.domain.entity.QrCode;
@@ -13,4 +14,6 @@ public interface QrcodeService {
     List<QrcodeInfoDto> getAllQrCodes();
     void deleteQrCode(Long qrCodeId);
     QrCode updateQrCode(Long qrCodeId,QrcodeCreationDto qrcodeCreationDto);
+
+    QrcodeAndZoneInfoDto getQrcodeAndZoneInfoDto(Long qrCodeId);
 }
