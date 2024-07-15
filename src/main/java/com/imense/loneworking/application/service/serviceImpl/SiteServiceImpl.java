@@ -1,6 +1,7 @@
 package com.imense.loneworking.application.service.serviceImpl;
 
 import com.imense.loneworking.application.dto.Dashboard.SiteDashboardDto;
+import com.imense.loneworking.application.dto.Qrcode.SiteQrCodeDto;
 import com.imense.loneworking.application.dto.Site.SiteCreationDto;
 import com.imense.loneworking.application.dto.Site.SiteInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.SiteService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -123,6 +125,25 @@ public class SiteServiceImpl implements SiteService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<SiteQrCodeDto> getSiteInfoQrCode() {
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        Tenant tenant = authUser.getTenant();
+        List<Site> sites = tenant.getSites();
+
+
+        List<SiteQrCodeDto> siteQrCodeDtos=new ArrayList<>();
+        for(Site site:sites){
+            SiteQrCodeDto siteQrCodeDto= new SiteQrCodeDto();
+            siteQrCodeDto.setSiteName(site.getName());
+            siteQrCodeDto.setSite_id(site.getId());
+            siteQrCodeDtos.add(siteQrCodeDto);
+        }
+        return siteQrCodeDtos;
     }
 
 }

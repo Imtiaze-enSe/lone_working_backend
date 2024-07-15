@@ -2,6 +2,7 @@ package com.imense.loneworking.presentation.controller;
 
 
 import com.imense.loneworking.application.dto.Dashboard.ZoneDashboardDto;
+import com.imense.loneworking.application.dto.Qrcode.ZoneQrCodeDto;
 import com.imense.loneworking.application.dto.Zone.ZoneCreationDto;
 import com.imense.loneworking.application.dto.Zone.ZoneInfoDto;
 import com.imense.loneworking.application.dto.Zone.ZoneUpdateDto;
@@ -43,5 +44,10 @@ public class ZoneController {
     @GetMapping("web/dashboard/zones/site_id:{site_id}")
     public List<ZoneDashboardDto> getSiteZoneInfoDashboard(@PathVariable Long site_id) {
         return zoneService.getSiteZoneInfoDashboard(site_id);
+    }
+
+    @GetMapping("web/qrCode/zones/site_id:{site_id}")
+    public List<ZoneQrCodeDto>getZoneInfoQrCode(@PathVariable Long site_id){
+        return zoneService.getZoneInfoQrCode(site_id);
     }
 }

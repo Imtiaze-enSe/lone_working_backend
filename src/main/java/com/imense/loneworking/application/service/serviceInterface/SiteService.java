@@ -1,6 +1,7 @@
 package com.imense.loneworking.application.service.serviceInterface;
 
 import com.imense.loneworking.application.dto.Dashboard.SiteDashboardDto;
+import com.imense.loneworking.application.dto.Qrcode.SiteQrCodeDto;
 import com.imense.loneworking.application.dto.Site.SiteCreationDto;
 import com.imense.loneworking.application.dto.Site.SiteInfoDto;
 import com.imense.loneworking.domain.entity.Site;
@@ -14,4 +15,6 @@ public interface SiteService {
     void deleteSite(Long siteId);
 
     List<SiteDashboardDto> getSiteInfoDashboard();
+
+    List<SiteQrCodeDto> getSiteInfoQrCode();
 }
