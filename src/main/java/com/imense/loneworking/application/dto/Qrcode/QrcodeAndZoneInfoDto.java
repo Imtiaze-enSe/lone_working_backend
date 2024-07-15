@@ -10,6 +10,8 @@ import org.locationtech.jts.geom.Geometry;
 @Setter
 public class QrcodeAndZoneInfoDto {
     private Long zoneId;
+    private String siteName;
+    private String zoneName;
     private String level;
     private String room;
     private String interior;

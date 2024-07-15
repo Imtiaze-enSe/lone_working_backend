@@ -158,9 +158,13 @@ public class QrcodeServiceImpl implements QrcodeService {
     @Override
     public QrcodeAndZoneInfoDto getQrcodeAndZoneInfoDto(Long qrCodeId) {
         QrCode qrCode=qrCodeRepository.findById(qrCodeId).orElseThrow(() -> new RuntimeException("QrCode not found"));
+        Zone zone=qrCode.getZone();
+        Site site=zone.getSite();
         QrcodeAndZoneInfoDto qrcodeAndZoneInfoDto=new QrcodeAndZoneInfoDto();
         qrcodeAndZoneInfoDto.setGeocoordinates(qrCode.getQr_code_position());
         qrcodeAndZoneInfoDto.setZoneId(qrCode.getZone().getId());
+        qrcodeAndZoneInfoDto.setZoneName(zone.getName());
+        qrcodeAndZoneInfoDto.setSiteName(site.getName());
         qrcodeAndZoneInfoDto.setRoom(qrCode.getRoom());
         qrcodeAndZoneInfoDto.setLevel(qrCode.getLevel());
         qrcodeAndZoneInfoDto.setInterior(qrCode.getInterior());
