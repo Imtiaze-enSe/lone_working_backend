@@ -33,11 +33,12 @@ public class User implements UserDetails {
     private Date login_at;
     private String phone;
     private String signature;
-    private String profile_photo;
+    @Lob
+    private byte[] profile_photo;
     private String qr_password;
     private Boolean terms_accepted;
     private Long function_id;
-    private Long report_to;
+    private String report_to;
     private String status;
     private Boolean ppe_status;
     private String email;
@@ -47,6 +48,9 @@ public class User implements UserDetails {
     private String remember_token;
     @Lob
     private String fcm_token;
+
+    @Lob
+    private byte[] company_logo;
 
     private LocalDateTime created_at;
     private LocalDateTime updated_at;

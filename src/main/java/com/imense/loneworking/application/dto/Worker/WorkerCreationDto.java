@@ -15,8 +15,9 @@ public class WorkerCreationDto {
     private String email;
     private String password;
     private String phone;
-    private String companyLogo;
-    private String linked_to;
+    private String company_logo;
+    private String report_to;
     private String department;
     private String function;
+    private String site_name;
 }

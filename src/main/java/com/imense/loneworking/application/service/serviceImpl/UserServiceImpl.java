@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,26 +68,39 @@ public class UserServiceImpl implements UserService {
         User authUser = userRepository.findByEmail(username);
         Tenant tenant = authUser.getTenant();
         List<User> users = tenant.getUsers();
+
         return users.stream().map(user -> {
             WorkerInfoDto workerDto = new WorkerInfoDto();
             workerDto.setId(user.getId());
-            workerDto.setProfile_photo(user.getProfile_photo());
+
+            // Check for null profile photo before encoding
+            if (user.getProfile_photo() != null) {
+                workerDto.setProfile_photo(Base64.getEncoder().encodeToString(user.getProfile_photo()));
+            } else {
+                workerDto.setProfile_photo(null);
+            }
+
             workerDto.setFirst_name(user.getFirst_name());
             workerDto.setLast_name(user.getLast_name());
             workerDto.setEmail(user.getEmail());
             workerDto.setPhone(user.getPhone());
-            workerDto.setCompany(user.getTenant().getName());
-            workerDto.setLinked_to(siteRepository.findById(user.getSiteId()).get().getName());
+
+            // Check for null company logo before encoding
+            if (user.getCompany_logo() != null) {
+                workerDto.setCompany_logo(Base64.getEncoder().encodeToString(user.getCompany_logo()));
+            } else {
+                workerDto.setCompany_logo(null);
+            }
+
             workerDto.setCreated_at(user.getCreated_at());
 
-
-            workerDto.setFunction(String.valueOf(user.getFunction_id()));
+            workerDto.setFunction(user.getFunction());
+            workerDto.setSite_name(siteRepository.findById(user.getSiteId()).get().getName());
             workerDto.setAddress(user.getAddress());
-            workerDto.setCompanyLogo(user.getTenant().getLogo());
             workerDto.setContact_person_phone(user.getContact_person_phone());
             workerDto.setContact_person(user.getContact_person());
-            workerDto.setReport_to(String.valueOf(user.getReport_to()));
-
+            workerDto.setReport_to(user.getReport_to());
+            workerDto.setDepartment(user.getDepartment());
 
             workerDto.setAlcoholic(user.getAlcoholic());
             workerDto.setMedications(user.getMedications());
@@ -98,6 +112,7 @@ public class UserServiceImpl implements UserService {
         }).collect(Collectors.toList());
     }
 
+
     @Override
     public User addWorker(WorkerCreationDto workerCreationDto) {
         String username = getCurrentUsername();
@@ -105,21 +120,42 @@ public class UserServiceImpl implements UserService {
         Long siteId = authUser.getSiteId();
         Optional<Site> thisSite = siteRepository.findById(siteId);
         Tenant tenant =  thisSite.get().getTenant();
-        Site site = siteRepository.findByName(workerCreationDto.getLinked_to());
+        System.out.println(tenant);
+
+        // Check if the email already exists in the database
+        if (userRepository.existsByEmail(workerCreationDto.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        Site site = siteRepository.findByName(workerCreationDto.getSite_name());
+        System.out.println(tenant);
         if (site == null) {
             throw new RuntimeException("Site not found");
         }
+
         User user = new User();
+
+        if (workerCreationDto.getProfile_photo() != null) {
+            user.setProfile_photo(Base64.getDecoder().decode(workerCreationDto.getProfile_photo()));
+        } else {
+            user.setProfile_photo(null); // or handle as needed
+        }
+        if (workerCreationDto.getCompany_logo() != null) {
+            user.setCompany_logo(Base64.getDecoder().decode(workerCreationDto.getCompany_logo()));
+        } else {
+            user.setCompany_logo(null); // or handle as needed
+        }
+
         user.setSiteId(site.getId());
         user.setFirst_name(workerCreationDto.getFirst_name());
         user.setLast_name(workerCreationDto.getLast_name());
-        user.setProfile_photo(workerCreationDto.getProfile_photo());
         user.setEmail(workerCreationDto.getEmail());
         user.setPassword(passwordEncoder.encode(workerCreationDto.getPassword()));
         user.setPhone(workerCreationDto.getPhone());
         user.setTenant(tenant);
         user.setDepartment(workerCreationDto.getDepartment());
         user.setFunction(workerCreationDto.getFunction());
+        user.setReport_to(workerCreationDto.getReport_to());
 
         user.setRole(WORKER);
 
@@ -128,17 +164,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateWorker(Long id, WorkerCreationDto workerCreationDto) {
-
-        Site site = siteRepository.findByName(workerCreationDto.getLinked_to());
+        Site site = siteRepository.findByName(workerCreationDto.getSite_name());
         if (site == null) {
             throw new RuntimeException("Site not found");
         }
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        if (workerCreationDto.getProfile_photo() != null) {
+            user.setProfile_photo(Base64.getDecoder().decode(workerCreationDto.getProfile_photo()));
+        } else {
+            user.setProfile_photo(null); // or handle as needed
+        }
+        if (workerCreationDto.getCompany_logo() != null) {
+            user.setCompany_logo(Base64.getDecoder().decode(workerCreationDto.getCompany_logo()));
+        } else {
+            user.setCompany_logo(null); // or handle as needed
+        }
         user.setFirst_name(workerCreationDto.getFirst_name());
         user.setLast_name(workerCreationDto.getLast_name());
-        user.setProfile_photo(workerCreationDto.getProfile_photo());
         user.setEmail(workerCreationDto.getEmail());
         user.setPassword(passwordEncoder.encode(workerCreationDto.getPassword()));
         user.setPhone(workerCreationDto.getPhone());

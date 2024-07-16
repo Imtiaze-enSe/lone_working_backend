@@ -9,6 +9,8 @@ import com.imense.loneworking.application.dto.Zone.ZoneUpdateDto;
 import com.imense.loneworking.application.service.serviceInterface.UserService;
 import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.domain.entity.Zone;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,12 +35,18 @@ public class UserController {
     }
 
     @PostMapping("web/worker")
-    public User addZone(@RequestBody WorkerCreationDto workerCreationDto) {
-        return userService.addWorker(workerCreationDto);
+    public ResponseEntity<User> addWorker(@RequestBody WorkerCreationDto workerCreationDto) {
+        User newUser = userService.addWorker(workerCreationDto);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
     @PutMapping("web/worker/{id}")
-    public User updateZone(@PathVariable Long id, @RequestBody WorkerCreationDto workerCreationDto) {
-        return userService.updateWorker(id, workerCreationDto);
+    public ResponseEntity<User> updateWorker(@PathVariable Long id, @RequestBody WorkerCreationDto workerCreationDto) {
+        User updatedUser = userService.updateWorker(id, workerCreationDto);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser); // Return 200 OK with the updated user object
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
+        }
     }
     @DeleteMapping("web/worker/{id}")
     public void deleteWorker(@PathVariable Long id) {

@@ -17,17 +17,17 @@ public class LoneworkingApplication {
 		SpringApplication.run(LoneworkingApplication.class, args);
 	}
 //	@Bean
-//	public CommandLineRunner commandLineRunner(
-//			AuthService authService
-//	){
-//		return args -> {
-//			var admin = RegistrationDto.builder()
-//					.email("admin@example.com")
-//					.password("test")
-//					.role(ADMIN)
-//					.site_id(0)
-//					.build();
-//			System.out.println("Admin token : " + authService.registerUser(admin).getFcm_token());
+	public CommandLineRunner commandLineRunner(
+			AuthService authService
+	){
+		return args -> {
+			var admin = RegistrationDto.builder()
+					.email("admin@example.com")
+					.password("test")
+					.role(ADMIN)
+					.site_id(0)
+					.build();
+			System.out.println("Admin token : " + authService.registerUser(admin).getFcm_token());
 //			var worker = RegistrationDto.builder()
 //					.email("worker@example.com")
 //					.password("test")
@@ -35,6 +35,7 @@ public class LoneworkingApplication {
 //					.site_id(0)
 //					.build();
 //			System.out.println("WORKER token : " + authService.registerUser(worker).getFcm_token());
-//		};
-//	}
+
+		};
+	}
 }

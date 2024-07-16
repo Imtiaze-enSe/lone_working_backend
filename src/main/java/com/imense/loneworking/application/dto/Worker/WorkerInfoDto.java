@@ -19,8 +19,6 @@ public class WorkerInfoDto {
     private String last_name;
     private String email;
     private String phone;
-    private String company;
-    private String linked_to;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern="yyyy-MM-dd HH:mm")
@@ -28,7 +26,9 @@ public class WorkerInfoDto {
 
     private String function;
     private String address;
-    private String companyLogo;
+    private String company_logo;
+    private String site_name;
+    private String department;
     private String contact_person_phone;
     private String contact_person;
     private String report_to;
