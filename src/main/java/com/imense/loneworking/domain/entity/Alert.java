@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
@@ -19,7 +20,8 @@ public class Alert {
     private Long id_alert;
     private String alert_status;
     private String alert_type;
-    private Date alert_created_at;
+    private LocalDateTime alert_created_at;
+    private LocalDateTime alert_updated_at;
     private Integer duration;
 
     @ManyToOne
@@ -28,5 +30,17 @@ public class Alert {
 
     @OneToMany(mappedBy = "alert")
     private Set<Update> updates;
+
+    @PrePersist
+    protected void onCreate() {
+        alert_created_at = LocalDateTime.now();
+        alert_updated_at = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        alert_updated_at = LocalDateTime.now();
+    }
+
 
 }
