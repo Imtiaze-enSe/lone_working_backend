@@ -1,6 +1,7 @@
 package com.imense.loneworking.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.imense.loneworking.domain.entity.Enum.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -83,6 +84,7 @@ public class User implements UserDetails {
     private List<Alert> alerts;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Notification> notifications;
 
     @Enumerated(EnumType.STRING)
