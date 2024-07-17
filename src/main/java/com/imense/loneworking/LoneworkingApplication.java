@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 import static com.imense.loneworking.domain.entity.Enum.UserRole.ADMIN;
 import static com.imense.loneworking.domain.entity.Enum.UserRole.WORKER;
