@@ -13,4 +13,6 @@ public interface NotificationService {
     List<NotificationInfoDto> getAllNotifications();
 
     void deleteNotification(Long notificationId);
+
+    void sendNotification(String message);
 }

@@ -22,7 +22,6 @@ public class NotificationServiceImpl implements NotificationService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
 
-
     public NotificationServiceImpl(NotificationRepository notificationRepository,SimpMessagingTemplate simpMessagingTemplate,UserRepository userRepository) {
         this.notificationRepository = notificationRepository;
         this.simpMessagingTemplate= simpMessagingTemplate;
@@ -76,4 +75,9 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.delete(notification);
 
     }
+
+    public void sendNotification(String message) {
+        simpMessagingTemplate.convertAndSend("/topic/notifications", message);
+    }
+
 }

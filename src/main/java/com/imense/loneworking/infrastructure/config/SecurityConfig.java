@@ -54,6 +54,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/location").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/mobile/**").hasAnyRole(ADMIN.name(), WORKER.name())
                         .requestMatchers(GET, "/api/mobile/**").hasAnyAuthority(ADMIN_READ.name(), WORKER_READ.name())
