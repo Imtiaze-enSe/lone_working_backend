@@ -38,17 +38,17 @@ public class NotificationController {
         notificationService.deleteNotification(id);
     }
 
-    // mapped as application/send
-    @MessageMapping("/send")
-    @SendTo("/all/notifications")
-    public String sendNotification(String message) {
-        System.out.println(message);
-        return message;
-    }
-    // mapped as application/private
-    @MessageMapping("/private")
-    public NotificationCreationDto sendToSpeceficUser(@Payload NotificationCreationDto notification) {
-        simpMessagingTemplate.convertAndSendToUser(notification.getSent_to(), "/specific", notification);
-        return notification;
-    }
+//    // mapped as application/send
+//    @MessageMapping("/send")
+//    @SendTo("/all/notifications")
+//    public String sendNotification(String message) {
+//        System.out.println(message);
+//        return message;
+//    }
+//    // mapped as application/private
+//    @MessageMapping("/private")
+//    public NotificationCreationDto sendToSpeceficUser(@Payload NotificationCreationDto notification) {
+//        simpMessagingTemplate.convertAndSendToUser(notification.getSent_to(), "/specific", notification);
+//        return notification;
+//    }
 }
