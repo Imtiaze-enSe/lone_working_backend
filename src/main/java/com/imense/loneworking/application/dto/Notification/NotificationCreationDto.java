@@ -11,4 +11,5 @@ public class NotificationCreationDto {
     private String title;
     private String message;
     private String sent_to;
+    private Long site_id;
 }

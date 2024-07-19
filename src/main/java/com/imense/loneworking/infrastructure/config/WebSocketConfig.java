@@ -23,8 +23,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new CustomWebSocketHandler(locationWebSocketHandler, webSocketService), "/location")
-                .setAllowedOrigins("*");
+        registry.addHandler(new CustomWebSocketHandler(locationWebSocketHandler, webSocketService), "/ws")
+                .setAllowedOrigins("http://localhost:3000"); // Update to match your CORS configuration
     }
 
     private static class CustomWebSocketHandler extends LocationWebSocketHandler {

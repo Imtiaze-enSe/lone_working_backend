@@ -14,5 +14,5 @@ public interface NotificationService {
 
     void deleteNotification(Long notificationId);
 
-    void sendNotification(String message);
+    void sendNotification(NotificationCreationDto notificationCreationDto);
 }

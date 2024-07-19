@@ -33,6 +33,19 @@ public class NotificationServiceImpl implements NotificationService {
         return userDetails.getUsername();
     }
     @Override
+    public void sendNotification(NotificationCreationDto notificationCreationDto) {
+        if ("all".equalsIgnoreCase(notificationCreationDto.getSent_to())) {
+            List<User> users = userRepository.findBySiteId(notificationCreationDto.getSite_id());
+            System.out.println(users);
+            users.forEach(user ->
+                    simpMessagingTemplate.convertAndSendToUser(user.getEmail(), "/all/notifications", notificationCreationDto)
+            );
+        } else {
+            simpMessagingTemplate.convertAndSendToUser(notificationCreationDto.getSent_to(), "/specific", notificationCreationDto);
+        }
+        addNotification(notificationCreationDto);
+    }
+    @Override
     public Notification addNotification(NotificationCreationDto notificationCreationDto) {
         String username = getCurrentUsername();
         User authUser = userRepository.findByEmail(username);
@@ -43,7 +56,6 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setNotification_sent_to(notificationCreationDto.getSent_to());
         notification.setUser(authUser);
 
-        simpMessagingTemplate.convertAndSend("/topic/notifications", notificationCreationDto.getMessage());
         return notificationRepository.save(notification);
     }
 
@@ -76,8 +88,5 @@ public class NotificationServiceImpl implements NotificationService {
 
     }
 
-    public void sendNotification(String message) {
-        simpMessagingTemplate.convertAndSend("/topic/notifications", message);
-    }
 
 }
