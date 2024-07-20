@@ -58,6 +58,11 @@ public class UserServiceImpl implements UserService {
             userDto.setZone(user.getZone());
             userDto.setLevel(user.getLevel());
             userDto.setRoom(user.getRoom());
+            if (user.getProfile_photo() != null) {
+                userDto.setProfile_photo(Base64.getEncoder().encodeToString(user.getProfile_photo()));
+            } else {
+                user.setProfile_photo(null);
+            }
             return userDto;
         }).collect(Collectors.toList());
     }

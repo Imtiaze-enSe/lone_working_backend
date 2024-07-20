@@ -12,6 +12,7 @@ public class UserDashboardDto {
     private Long id;
     private String first_name;
     private String last_name;
+    private String profile_photo;
     private String company_name;
     private Geometry position;
     private String status;
