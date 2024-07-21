@@ -81,6 +81,7 @@ public class User implements UserDetails {
     private Tenant tenant;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Alert> alerts;
 
     @OneToMany(mappedBy = "user")

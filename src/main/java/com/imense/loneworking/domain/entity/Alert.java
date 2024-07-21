@@ -1,6 +1,7 @@
 package com.imense.loneworking.domain.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class Alert {
 
     @ManyToOne
     @JoinColumn(name = "id")
+    @JsonBackReference
     private User user;
 
     @OneToMany(mappedBy = "alert")
