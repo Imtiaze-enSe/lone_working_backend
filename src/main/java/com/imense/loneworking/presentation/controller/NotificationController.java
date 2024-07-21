@@ -17,11 +17,9 @@ import java.util.List;
 @RequestMapping("/api")
 public class NotificationController {
     private final NotificationService notificationService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public NotificationController(NotificationService notificationService, SimpMessagingTemplate simpMessagingTemplate) {
+    public NotificationController(NotificationService notificationService) {
         this.notificationService = notificationService;
-        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
 //    @PostMapping("web/notification")
