@@ -1,8 +1,7 @@
 package com.imense.loneworking.application.service.serviceImpl;
 
 import com.imense.loneworking.application.dto.Dashboard.UserDashboardDto;
-import com.imense.loneworking.application.dto.Worker.WorkerCreationDto;
-import com.imense.loneworking.application.dto.Worker.WorkerInfoDto;
+import com.imense.loneworking.application.dto.Worker.*;
 import com.imense.loneworking.application.service.serviceInterface.UserService;
 import com.imense.loneworking.domain.entity.Site;
 import com.imense.loneworking.domain.entity.Tenant;
@@ -206,5 +205,70 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
     }
 
+
+    @Override
+    public AuthenticatedUserDto getAuthenticatedUser() {
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        AuthenticatedUserDto authenticatedUserDto=new AuthenticatedUserDto();
+        authenticatedUserDto.setId(authUser.getId());
+
+        if (authUser.getProfile_photo() != null) {
+            authenticatedUserDto.setProfile_photo(Base64.getEncoder().encodeToString(authUser.getProfile_photo()));
+        } else {
+            authenticatedUserDto.setProfile_photo(null);
+        }
+
+        if (authUser.getCompany_logo() != null) {
+            authenticatedUserDto.setCompany_logo(Base64.getEncoder().encodeToString(authUser.getCompany_logo()));
+        } else {
+            authenticatedUserDto.setCompany_logo(null);
+        }
+        authenticatedUserDto.setFirst_name(authUser.getFirst_name());
+        authenticatedUserDto.setLast_name(authUser.getLast_name());
+        authenticatedUserDto.setEmail(authUser.getEmail());
+        authenticatedUserDto.setPhone(authUser.getPhone());
+        authenticatedUserDto.setFunction(authUser.getFunction());
+        authenticatedUserDto.setAddress(authUser.getAddress());
+        return authenticatedUserDto;
+
+    }
+
+    @Override
+    public User editProfileUser(EditProfileUserDto editProfileUserDto) {
+        User user = userRepository.findById(editProfileUserDto.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setFirst_name(editProfileUserDto.getFirst_name());
+        user.setLast_name(editProfileUserDto.getLast_name());
+        user.setEmail(editProfileUserDto.getEmail());
+        user.setPhone(editProfileUserDto.getPhone());
+        user.setFunction(editProfileUserDto.getFunction());
+        user.setAddress(editProfileUserDto.getAddress());
+        if (editProfileUserDto.getProfile_photo() != null) {
+            user.setProfile_photo(Base64.getDecoder().decode(editProfileUserDto.getProfile_photo()));
+        } else {
+            user.setProfile_photo(null); // or handle as needed
+        }
+        return userRepository.save(user);
+    }
+
+
+    @Override
+    public User changePasswordUser(ChangePasswordDto changePasswordDto) {
+        User user = userRepository.findById(changePasswordDto.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(changePasswordDto.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmPassword())) {
+            throw new RuntimeException("New password and confirmation do not match");
+        }
+
+        user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+
+        return userRepository.save(user);
+    }
 
 }

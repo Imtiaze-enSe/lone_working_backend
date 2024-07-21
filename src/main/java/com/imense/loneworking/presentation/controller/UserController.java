@@ -2,8 +2,7 @@ package com.imense.loneworking.presentation.controller;
 
 
 import com.imense.loneworking.application.dto.Dashboard.UserDashboardDto;
-import com.imense.loneworking.application.dto.Worker.WorkerCreationDto;
-import com.imense.loneworking.application.dto.Worker.WorkerInfoDto;
+import com.imense.loneworking.application.dto.Worker.*;
 import com.imense.loneworking.application.dto.Zone.ZoneCreationDto;
 import com.imense.loneworking.application.dto.Zone.ZoneUpdateDto;
 import com.imense.loneworking.application.service.serviceInterface.UserService;
@@ -51,5 +50,31 @@ public class UserController {
     @DeleteMapping("web/worker/{id}")
     public void deleteWorker(@PathVariable Long id) {
         userService.deleteWorker(id);
+    }
+
+    @GetMapping("web/worker/authenticated")
+    public AuthenticatedUserDto getAuthenticatedUser(){
+        return userService.getAuthenticatedUser();
+    }
+
+    @PutMapping("web/worker/authenticated")
+    public ResponseEntity<User> editProfileUser(@RequestBody EditProfileUserDto editProfileUserDto){
+        User updatedUser = userService.editProfileUser(editProfileUserDto);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser); // Return 200 OK with the updated user object
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
+        }
+    }
+
+
+    @PutMapping("web/worker/authenticated/password")
+    public ResponseEntity<User> changePasswordUser(@RequestBody ChangePasswordDto changePasswordDto){
+        User updatedUser = userService.changePasswordUser(changePasswordDto);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser); // Return 200 OK with the updated user object
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
+        }
     }
 }
