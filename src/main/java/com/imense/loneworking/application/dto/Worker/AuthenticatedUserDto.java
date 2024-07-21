@@ -17,5 +17,6 @@ public class AuthenticatedUserDto {
     private String function;
     private String address;
     private String password;
+    private Long site_id;
     private String company_logo;
 }

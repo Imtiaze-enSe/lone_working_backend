@@ -230,6 +230,7 @@ public class UserServiceImpl implements UserService {
         authenticatedUserDto.setPhone(authUser.getPhone());
         authenticatedUserDto.setFunction(authUser.getFunction());
         authenticatedUserDto.setAddress(authUser.getAddress());
+        authenticatedUserDto.setSite_id(authUser.getSiteId());
         return authenticatedUserDto;
 
     }
