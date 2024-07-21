@@ -1,24 +1,50 @@
 package com.imense.loneworking.infrastructure.config;
 
+import com.imense.loneworking.infrastructure.websocket.LocationWebSocketHandler;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import com.imense.loneworking.infrastructure.websocket.WebSocketService;
 
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketConfigurer {
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/api/web");
-        config.setApplicationDestinationPrefixes("/app");
+    private final LocationWebSocketHandler locationWebSocketHandler;
+    private final WebSocketService webSocketService;
+
+    public WebSocketConfig(LocationWebSocketHandler locationWebSocketHandler, WebSocketService webSocketService) {
+        this.locationWebSocketHandler = locationWebSocketHandler;
+        this.webSocketService = webSocketService;
     }
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(new CustomWebSocketHandler(locationWebSocketHandler, webSocketService), "/location")
+                .setAllowedOrigins("*");
+    }
+
+    private static class CustomWebSocketHandler extends LocationWebSocketHandler {
+        private final WebSocketService webSocketService;
+
+        public CustomWebSocketHandler(LocationWebSocketHandler delegate, WebSocketService webSocketService) {
+            super(delegate.getLocationService(), delegate.getObjectMapper());
+            this.webSocketService = webSocketService;
+        }
+
+        @Override
+        public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+            super.afterConnectionEstablished(session);
+            webSocketService.addSession(session);
+        }
+
+        @Override
+        public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+            super.afterConnectionClosed(session, status);
+            webSocketService.removeSession(session);
+        }
     }
 }
-

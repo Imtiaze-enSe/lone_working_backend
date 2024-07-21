@@ -22,7 +22,6 @@ public class NotificationServiceImpl implements NotificationService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
 
-
     public NotificationServiceImpl(NotificationRepository notificationRepository,SimpMessagingTemplate simpMessagingTemplate,UserRepository userRepository) {
         this.notificationRepository = notificationRepository;
         this.simpMessagingTemplate= simpMessagingTemplate;
@@ -34,20 +33,42 @@ public class NotificationServiceImpl implements NotificationService {
         return userDetails.getUsername();
     }
     @Override
-    public Notification addNotification(NotificationCreationDto notificationCreationDto) {
-        String username = getCurrentUsername();
-        User authUser = userRepository.findByEmail(username);
+    public void sendNotification(NotificationCreationDto notificationCreationDto) {
+        System.out.println("Sending notification: " + notificationCreationDto);
+        User authUser = userRepository.findByEmail(notificationCreationDto.getSent_by());
 
-        Notification notification=new Notification();
+        // Save the notification to the database
+        Notification notification = new Notification();
         notification.setNotification_title(notificationCreationDto.getTitle());
         notification.setNotification_message(notificationCreationDto.getMessage());
         notification.setNotification_sent_to(notificationCreationDto.getSent_to());
         notification.setUser(authUser);
 
-        simpMessagingTemplate.convertAndSend("/topic/notifications", notificationCreationDto.getMessage());
-        return notificationRepository.save(notification);
-    }
+        notificationRepository.save(notification);
 
+        // Get all users with the specified site_id
+        List<User> targetUsers = userRepository.findBySiteId(notificationCreationDto.getSite_id());
+
+        if ("all".equalsIgnoreCase(notificationCreationDto.getSent_to())) {
+            System.out.println("Sending to all users with site_id: " + notificationCreationDto.getSite_id());
+            // Send to all users with the specified site_id
+            simpMessagingTemplate.convertAndSend(
+                    "/topic/notifications/site/" + notificationCreationDto.getSite_id(),
+                    notificationCreationDto
+            );
+        } else {
+            // Send to a specific user, but only if they belong to the specified site
+            User targetUser = userRepository.findByEmail(notificationCreationDto.getSent_to());
+            System.out.println("Sending to specific user  1111 : " + notificationCreationDto.getSent_to());
+            if (targetUser != null) {
+                System.out.println("Sending to specific user: " + targetUser.getEmail());
+                simpMessagingTemplate.convertAndSend(
+                        "/topic/notifications/site/" + notificationCreationDto.getSite_id() + "/" + notificationCreationDto.getSent_to(),
+                        notificationCreationDto
+                );
+            }
+        }
+    }
 
     @Override
     public List<NotificationInfoDto> getAllNotifications() {
@@ -76,4 +97,5 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.delete(notification);
 
     }
+
 }
