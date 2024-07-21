@@ -8,11 +8,10 @@ import java.util.List;
 
 
 public interface NotificationService {
-    Notification addNotification(NotificationCreationDto notificationCreationDto);
 
     List<NotificationInfoDto> getAllNotifications();
 
     void deleteNotification(Long notificationId);
 
-    void sendNotification(String message);
+    void sendNotification(NotificationCreationDto notificationCreationDto);
 }

@@ -24,10 +24,10 @@ public class NotificationController {
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    @PostMapping("web/notification")
-    public Notification addNotification(@RequestBody NotificationCreationDto notificationCreationDto){
-        return  notificationService.addNotification(notificationCreationDto);
-    }
+//    @PostMapping("web/notification")
+//    public Notification addNotification(@RequestBody NotificationCreationDto notificationCreationDto){
+//        return  notificationService.addNotification(notificationCreationDto);
+//    }
 
     @GetMapping("web/notifications")
     public List<NotificationInfoDto> getAllNotifications(){
