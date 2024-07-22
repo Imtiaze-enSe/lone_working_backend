@@ -39,30 +39,25 @@ public class AlertServiceImpl implements AlertService {
         System.out.println("Sending alert: " + alertCreationDto);
         User authUser=userRepository.findByEmail(alertCreationDto.getAlert_created_by());
         Alert alert=new Alert();
+
         alert.setUser(authUser);
+
         alert.setAlert_type(alertCreationDto.getAlert_type());
         alert.setAlert_status(alertCreationDto.getAlert_status());
         alert.setDuration(alertCreationDto.getDuration());
-        alert.setAlert_status(alertCreationDto.getAlert_status());
-        alert.setAlert_type(alert.getAlert_type());
-        alertRepository.save(alert);
-        List<User> usersOfSite=userRepository.findBySiteId(authUser.getSiteId());
-        List<User> targetUsers=new ArrayList<>();
-        for(User user:usersOfSite){
-            if(user.getRole().equals(UserRole.ADMIN)){
-                targetUsers.add(user);
-            }
-        }
-        if (!targetUsers.isEmpty()) {
-        for (User user:targetUsers)
-        {
-            simpMessagingTemplate.convertAndSend(
-                    "/topic/alerts/site/" + authUser.getSiteId()+"/"+ user.getEmail() ,
-                    alertCreationDto
-            );
-        }
+        Alert savedAlert =alertRepository.save(alert);
 
-        }
+        AlertTableDto alertTableDto=new AlertTableDto();
+        alertTableDto.setId(savedAlert.getId_alert());
+        alertTableDto.setType(savedAlert.getAlert_type());
+        alertTableDto.setStatus(savedAlert.getAlert_status());
+        alertTableDto.setAlert_created_at(savedAlert.getAlert_created_at());
+        alertTableDto.setCreatedBy(savedAlert.getUser().getFirst_name()+" "+savedAlert.getUser().getLast_name());
+            simpMessagingTemplate.convertAndSend(
+                    "/topic/alerts/site/" + authUser.getSiteId(),
+                    alertTableDto
+            );
+
 
     }
 
