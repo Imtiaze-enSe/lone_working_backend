@@ -1,6 +1,5 @@
 package com.imense.loneworking.application.service.serviceImpl;
 
-import com.imense.loneworking.application.dto.Notification.NotificationBroadcastDto;
 import com.imense.loneworking.application.dto.Notification.NotificationCreationDto;
 import com.imense.loneworking.application.dto.Notification.NotificationInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.NotificationService;
@@ -45,25 +44,17 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setNotification_sent_to(notificationCreationDto.getSent_to());
         notification.setUser(authUser);
 
-        // Save the notification and get the ID
-        Notification savedNotification = notificationRepository.save(notification);
+        notificationRepository.save(notification);
 
-        // Prepare notification data including ID
-        NotificationBroadcastDto notificationWithId = new NotificationBroadcastDto();
-        notificationWithId.setId(savedNotification.getId_notification());
-        notificationWithId.setTitle(notificationCreationDto.getTitle());
-        notificationWithId.setMessage(notificationCreationDto.getMessage());
-        notificationWithId.setSent_by(notificationCreationDto.getSent_by());
-        notificationWithId.setSent_to(notificationCreationDto.getSent_to());
-        notificationWithId.setSite_id(notificationCreationDto.getSite_id());
-
+        // Get all users with the specified site_id
+        List<User> targetUsers = userRepository.findBySiteId(notificationCreationDto.getSite_id());
 
         if ("all".equalsIgnoreCase(notificationCreationDto.getSent_to())) {
             System.out.println("Sending to all users with site_id: " + notificationCreationDto.getSite_id());
             // Send to all users with the specified site_id
             simpMessagingTemplate.convertAndSend(
                     "/topic/notifications/site/" + notificationCreationDto.getSite_id(),
-                    notificationWithId
+                    notificationCreationDto
             );
         } else {
             // Send to a specific user, but only if they belong to the specified site
@@ -73,7 +64,7 @@ public class NotificationServiceImpl implements NotificationService {
                 System.out.println("Sending to specific user: " + targetUser.getEmail());
                 simpMessagingTemplate.convertAndSend(
                         "/topic/notifications/site/" + notificationCreationDto.getSite_id() + "/" + notificationCreationDto.getSent_to(),
-                        notificationWithId
+                        notificationCreationDto
                 );
             }
         }
