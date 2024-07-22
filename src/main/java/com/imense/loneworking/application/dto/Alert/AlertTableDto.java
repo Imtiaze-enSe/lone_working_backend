@@ -22,5 +22,5 @@ public class AlertTableDto {
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern="yyyy-MM-dd HH:mm")
-    private LocalDateTime alert_created_at;
+    private LocalDateTime createdAt;
 }
