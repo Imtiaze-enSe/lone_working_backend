@@ -61,6 +61,7 @@ public class AlertServiceImpl implements AlertService {
 
     }
 
+
     @Override
     public List<AlertTableDto> getAlertForTable() {
         String username = getCurrentUsername();

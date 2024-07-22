@@ -2,6 +2,7 @@ package com.imense.loneworking.application.service.serviceImpl;
 
 import com.imense.loneworking.application.dto.Worker.LocationUpdateDto;
 import com.imense.loneworking.application.service.serviceInterface.LocationService;
+import com.imense.loneworking.domain.entity.User;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -30,11 +31,11 @@ public class LocationServiceImpl implements LocationService {
         Point point = geometryFactory.createPoint(new Coordinate(locationUpdate.getLongitude(), locationUpdate.getLatitude()));
         System.out.println(point);
         // Update the user's position in the database
-        userRepository.findById(locationUpdate.getUserId()).ifPresent(user -> {
+        User user = userRepository.findByEmail(locationUpdate.getUserEmail());
+        if (user != null){
             user.setPosition(point);
             userRepository.save(user);
-        });
-
+        }
         // Forward the location update to the web frontend
         webSocketService.sendLocationUpdate(locationUpdate);
     }
