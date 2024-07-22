@@ -84,4 +84,9 @@ public class AlertServiceImpl implements AlertService {
 
 
     }
+    @Override
+    public void deleteAlert(Long alertId) {
+        Alert alert =alertRepository.findById(alertId).orElseThrow(() -> new RuntimeException("Alert not found"));
+        alertRepository.delete(alert);
+    }
 }

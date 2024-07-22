@@ -8,4 +8,6 @@ import java.util.List;
 public interface AlertService {
     List<AlertTableDto> getAlertForTable();
     void sendAlert(AlertCreationDto alertCreationDto);
+
+    void deleteAlert(Long alertId);
 }
