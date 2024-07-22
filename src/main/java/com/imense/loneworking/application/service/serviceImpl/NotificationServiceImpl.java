@@ -68,7 +68,6 @@ public class NotificationServiceImpl implements NotificationService {
         } else {
             // Send to a specific user, but only if they belong to the specified site
             User targetUser = userRepository.findByEmail(notificationCreationDto.getSent_to());
-            System.out.println("Sending to specific user  1111 : " + notificationCreationDto.getSent_to());
             if (targetUser != null) {
                 System.out.println("Sending to specific user: " + targetUser.getEmail());
                 simpMessagingTemplate.convertAndSend(
