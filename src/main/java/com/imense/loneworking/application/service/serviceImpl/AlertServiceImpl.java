@@ -38,20 +38,29 @@ public class AlertServiceImpl implements AlertService {
     public void sendAlert(AlertCreationDto alertCreationDto) {
         System.out.println("Sending alert: " + alertCreationDto);
         User authUser=userRepository.findByEmail(alertCreationDto.getAlert_created_by());
-
         Alert alert=new Alert();
 
         alert.setUser(authUser);
+
         alert.setAlert_type(alertCreationDto.getAlert_type());
         alert.setAlert_status(alertCreationDto.getAlert_status());
         alert.setDuration(alertCreationDto.getDuration());
+        Alert savedAlert =alertRepository.save(alert);
 
-        alertRepository.save(alert);
-        simpMessagingTemplate.convertAndSend(
-                "/topic/alerts/site/" + authUser.getSiteId() ,
-                alertCreationDto
-        );
+        AlertTableDto alertTableDto=new AlertTableDto();
+        alertTableDto.setId(savedAlert.getId_alert());
+        alertTableDto.setType(savedAlert.getAlert_type());
+        alertTableDto.setStatus(savedAlert.getAlert_status());
+        alertTableDto.setCreatedAt(savedAlert.getAlert_created_at());
+        alertTableDto.setCreatedBy(savedAlert.getUser().getFirst_name()+" "+savedAlert.getUser().getLast_name());
+            simpMessagingTemplate.convertAndSend(
+                    "/topic/alerts/site/" + authUser.getSiteId(),
+                    alertTableDto
+            );
+
+
     }
+
 
     @Override
     public List<AlertTableDto> getAlertForTable() {
@@ -67,6 +76,7 @@ public class AlertServiceImpl implements AlertService {
             dto.setType(alert.getAlert_type());
             dto.setStatus(alert.getAlert_status());
             dto.setCreatedBy(alert.getUser().getFirst_name()+" "+alert.getUser().getLast_name());
+            dto.setCreatedAt(alert.getAlert_created_at());
             return dto;
         }).collect(Collectors.toList());
 
