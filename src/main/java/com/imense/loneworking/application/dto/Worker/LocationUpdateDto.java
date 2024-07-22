@@ -11,5 +11,4 @@ public class LocationUpdateDto {
     private Long userId;
     private double latitude;
     private double longitude;
-    // Add any other relevant fields (e.g., timestamp)
 }
