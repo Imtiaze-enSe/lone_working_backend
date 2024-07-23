@@ -18,8 +18,4 @@ public class AlertCreationDto {
     private String alert_type;
     private int duration;
     private String alert_created_by;
-
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
-    private LocalDateTime alert_created_at;
 }
