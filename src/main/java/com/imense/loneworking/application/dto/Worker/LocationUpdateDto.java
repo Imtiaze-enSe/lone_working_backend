@@ -8,7 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LocationUpdateDto {
-    private String userEmail;
+    private Long user_id;
+    private Long site_id;
     private double latitude;
     private double longitude;
 }
