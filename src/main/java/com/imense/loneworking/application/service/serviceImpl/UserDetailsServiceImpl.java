@@ -4,6 +4,7 @@ import com.imense.loneworking.domain.entity.Enum.UserRole;
 import com.imense.loneworking.domain.entity.Tenant;
 import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.domain.repository.UserRepository;
+import com.imense.loneworking.infrastructure.security.JwtUtil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +20,11 @@ import java.util.stream.Collectors;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil; // Inject JwtUtil
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
