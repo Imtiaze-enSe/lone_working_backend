@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.imense.loneworking.domain.repository.UserRepository;
 import com.imense.loneworking.infrastructure.websocket.WebSocketService;
 
+import java.util.Optional;
+
 @Service
 public class LocationServiceImpl implements LocationService {
 
@@ -31,10 +33,10 @@ public class LocationServiceImpl implements LocationService {
         Point point = geometryFactory.createPoint(new Coordinate(locationUpdate.getLongitude(), locationUpdate.getLatitude()));
         System.out.println(point);
         // Update the user's position in the database
-        User user = userRepository.findByEmail(locationUpdate.getUserEmail());
-        if (user != null){
-            user.setPosition(point);
-            userRepository.save(user);
+        Optional<User> user = userRepository.findById(locationUpdate.getUserId());
+        if (user.isPresent()){
+            user.get().setPosition(point);
+            userRepository.save(user.get());
         }
         // Forward the location update to the web frontend
         webSocketService.sendLocationUpdate(locationUpdate);

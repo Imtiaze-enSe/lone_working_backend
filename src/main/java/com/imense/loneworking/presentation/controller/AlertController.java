@@ -1,6 +1,7 @@
 package com.imense.loneworking.presentation.controller;
 
 import com.imense.loneworking.application.dto.Alert.AlertTableDto;
+import com.imense.loneworking.application.dto.Alert.UserInfoAlertDto;
 import com.imense.loneworking.application.service.serviceInterface.AlertService;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,5 +24,10 @@ public class AlertController {
     @DeleteMapping("/web/alert/{id}")
     public void deleteAlert(@PathVariable Long id){
         alertService.deleteAlert(id);
+    }
+
+    @GetMapping("/web/alert/user/{id}")
+    public UserInfoAlertDto getUserForAlert(@PathVariable Long id){
+        return alertService.getUserForAlert(id);
     }
 }
