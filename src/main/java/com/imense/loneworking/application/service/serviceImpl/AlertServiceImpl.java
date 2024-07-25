@@ -2,6 +2,7 @@ package com.imense.loneworking.application.service.serviceImpl;
 
 import com.imense.loneworking.application.dto.Alert.AlertCreationDto;
 import com.imense.loneworking.application.dto.Alert.AlertTableDto;
+import com.imense.loneworking.application.dto.Alert.AlertTrackerDto;
 import com.imense.loneworking.application.service.serviceInterface.AlertService;
 import com.imense.loneworking.domain.entity.Alert;
 import com.imense.loneworking.domain.entity.Enum.UserRole;
@@ -35,7 +36,7 @@ public class AlertServiceImpl implements AlertService {
     }
 
     @Override
-    public void sendAlert(AlertCreationDto alertCreationDto) {
+    public AlertTableDto sendAlert(AlertCreationDto alertCreationDto) {
         System.out.println("Sending alert: " + alertCreationDto);
         User authUser=userRepository.findByEmail(alertCreationDto.getAlert_created_by());
         Alert alert=new Alert();
@@ -58,6 +59,7 @@ public class AlertServiceImpl implements AlertService {
                     alertTableDto
             );
 
+        return alertTableDto;
 
     }
 
@@ -81,8 +83,6 @@ public class AlertServiceImpl implements AlertService {
         }).collect(Collectors.toList());
 
         return alertTableDtos;
-
-
     }
     @Override
     public void deleteAlert(Long alertId) {

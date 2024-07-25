@@ -1,6 +1,8 @@
 package com.imense.loneworking.presentation.controller;
 
 import com.imense.loneworking.application.dto.Alert.AlertCreationDto;
+import com.imense.loneworking.application.dto.Alert.AlertTableDto;
+import com.imense.loneworking.application.dto.Alert.AlertTrackerDto;
 import com.imense.loneworking.application.service.serviceInterface.AlertService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -15,7 +17,7 @@ public class AlertWebsocketController {
     }
 
     @MessageMapping("/sendAlert")
-    public void addAlert(@Payload AlertCreationDto alertCreationDto){
-        alertService.sendAlert(alertCreationDto);
+    public AlertTableDto addAlert(@Payload AlertCreationDto alertCreationDto){
+        return alertService.sendAlert(alertCreationDto);
     }
 }
