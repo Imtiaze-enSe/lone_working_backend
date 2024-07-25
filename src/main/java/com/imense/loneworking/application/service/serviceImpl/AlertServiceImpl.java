@@ -56,10 +56,14 @@ public class AlertServiceImpl implements AlertService {
         alertTableDto.setStatus(savedAlert.getAlert_status());
         alertTableDto.setCreatedAt(savedAlert.getAlert_created_at());
         alertTableDto.setCreatedBy(savedAlert.getUser().getFirst_name()+" "+savedAlert.getUser().getLast_name());
-            simpMessagingTemplate.convertAndSend(
-                    "/topic/alerts/site/" + authUser.getSiteId(),
-                    alertTableDto
-            );
+        simpMessagingTemplate.convertAndSend(
+                "/topic/alerts/site/" + authUser.getSiteId(),
+                alertTableDto
+        );
+        simpMessagingTemplate.convertAndSend(
+                "/topic/alerts/user/" + authUser.getId(),
+                alertTableDto
+        );
 
         return alertTableDto;
 
