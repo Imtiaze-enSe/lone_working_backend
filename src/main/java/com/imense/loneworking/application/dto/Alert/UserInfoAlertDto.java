@@ -9,6 +9,7 @@ import org.locationtech.jts.geom.Geometry;
 @Getter
 @Setter
 public class UserInfoAlertDto {
+    private Long user_id;
     private String name;
     private String phone;
     private Geometry position;

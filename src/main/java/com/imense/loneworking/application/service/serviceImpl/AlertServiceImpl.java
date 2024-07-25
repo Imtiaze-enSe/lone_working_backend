@@ -100,6 +100,7 @@ public class AlertServiceImpl implements AlertService {
         userInfoAlertDto.setPhone(user.getPhone());
         userInfoAlertDto.setPosition(user.getPosition());
         userInfoAlertDto.setDuration(alert.getDuration());
+        userInfoAlertDto.setUser_id(alert.getUser().getId());
         if (user.getProfile_photo() != null) {
             userInfoAlertDto.setProfile_photo(Base64.getEncoder().encodeToString(user.getProfile_photo()));
         } else {
