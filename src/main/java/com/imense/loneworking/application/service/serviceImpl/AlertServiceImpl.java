@@ -108,4 +108,12 @@ public class AlertServiceImpl implements AlertService {
         }
         return userInfoAlertDto;
     }
+
+
+    @Override
+    public Alert closeAlert(Long idAlert) {
+        Alert alert=alertRepository.findById(idAlert).orElseThrow(() -> new RuntimeException("Alert not found"));
+        alert.setAlert_status("Closed");
+        return alertRepository.save(alert);
+    }
 }
