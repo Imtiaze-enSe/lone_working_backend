@@ -2,14 +2,13 @@ package com.imense.loneworking.domain.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,7 +30,12 @@ public class Alert {
     private User user;
 
     @OneToMany(mappedBy = "alert")
-    private Set<Update> updates;
+    @JsonManagedReference
+    private List<Update> updates;
+
+    @OneToMany(mappedBy = "alert")
+    @JsonManagedReference
+    private List<Note> notes;
 
     @PrePersist
     protected void onCreate() {

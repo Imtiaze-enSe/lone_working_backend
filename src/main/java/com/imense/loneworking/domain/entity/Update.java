@@ -1,13 +1,12 @@
 package com.imense.loneworking.domain.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -19,10 +18,17 @@ public class Update {
     private Long id_update;
     private String title;
     private String message;
-    private Date update_created_at;
+    private LocalDateTime update_created_at;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "idAlert")
     private Alert alert;
+
+    @PrePersist
+    protected void onCreate() {
+        update_created_at = LocalDateTime.now();
+    }
+
 
 }
