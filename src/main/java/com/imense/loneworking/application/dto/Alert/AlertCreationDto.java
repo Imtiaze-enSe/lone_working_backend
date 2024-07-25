@@ -13,5 +13,4 @@ public class AlertCreationDto {
     private String alert_type;
     private int duration;
     private String alert_created_by;
-
 }

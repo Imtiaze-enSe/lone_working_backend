@@ -209,6 +209,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AuthenticatedUserDto getAuthenticatedUser() {
         String username = getCurrentUsername();
+        System.out.println("Helloooo : " + username);
         User authUser = userRepository.findByEmail(username);
         AuthenticatedUserDto authenticatedUserDto=new AuthenticatedUserDto();
         authenticatedUserDto.setId(authUser.getId());
