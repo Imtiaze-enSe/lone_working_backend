@@ -43,7 +43,7 @@ public class LocationServiceImpl implements LocationService {
 //        webSocketService.sendLocationUpdate(locationUpdate);
 //    }
 
-    @Override
+@Override
     public void processLocationUpdate(LocationUpdateDto locationUpdate) {
         Point point = geometryFactory.createPoint(new Coordinate(locationUpdate.getLongitude(), locationUpdate.getLatitude()));
         Optional<User> user = userRepository.findById(locationUpdate.getUser_id());

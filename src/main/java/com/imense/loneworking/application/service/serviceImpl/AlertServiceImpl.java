@@ -2,6 +2,7 @@ package com.imense.loneworking.application.service.serviceImpl;
 
 import com.imense.loneworking.application.dto.Alert.AlertCreationDto;
 import com.imense.loneworking.application.dto.Alert.AlertTableDto;
+import com.imense.loneworking.application.dto.Alert.UserInfoAlertDto;
 import com.imense.loneworking.application.service.serviceInterface.AlertService;
 import com.imense.loneworking.domain.entity.Alert;
 import com.imense.loneworking.domain.entity.Enum.UserRole;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,5 +90,21 @@ public class AlertServiceImpl implements AlertService {
     public void deleteAlert(Long alertId) {
         Alert alert =alertRepository.findById(alertId).orElseThrow(() -> new RuntimeException("Alert not found"));
         alertRepository.delete(alert);
+    }
+    @Override
+    public UserInfoAlertDto getUserForAlert(Long idAlert) {
+        Alert alert=alertRepository.findById(idAlert).orElseThrow(() -> new RuntimeException("Alert not found"));
+        User user= alert.getUser();
+        UserInfoAlertDto userInfoAlertDto=new UserInfoAlertDto();
+        userInfoAlertDto.setName(user.getFirst_name()+" "+user.getLast_name());
+        userInfoAlertDto.setPhone(user.getPhone());
+        userInfoAlertDto.setPosition(user.getPosition());
+        userInfoAlertDto.setDuration(alert.getDuration());
+        if (user.getProfile_photo() != null) {
+            userInfoAlertDto.setProfile_photo(Base64.getEncoder().encodeToString(user.getProfile_photo()));
+        } else {
+            userInfoAlertDto.setProfile_photo(null);
+        }
+        return userInfoAlertDto;
     }
 }
