@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class NoteInfoDto {
-    private Long alert_id;
-    private String note_message;
+    private Long id;
+    private String note;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;

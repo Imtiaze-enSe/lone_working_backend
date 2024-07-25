@@ -61,9 +61,9 @@ public class NoteServiceImpl implements NoteService {
             List<Note> notes=alert.getNotes();
             for (Note note:notes){
                 NoteInfoDto noteInfoDto=new NoteInfoDto();
-                noteInfoDto.setAlert_id(note.getAlert().getId_alert());
                 noteInfoDto.setCreatedAt(note.getNote_created_at());
-                noteInfoDto.setNote_message(note.getNote());
+                noteInfoDto.setNote(note.getNote());
+                noteInfoDto.setId(note.getId_note());
                 noteInfoDtos.add(noteInfoDto);
             }
         }
