@@ -37,8 +37,14 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         user.setRole(registrationDto.getRole());
         user.setSiteId(Long.valueOf(registrationDto.getSite_id()));
-        user.setFcm_token(jwtUtil.generateToken(user));
-        return userRepository.save(user);
+
+        User savedUser = userRepository.save(user);
+
+        // Generate token with user ID
+        String token = jwtUtil.generateToken(userDetailsService.loadUserByUsername(registrationDto.getEmail()), savedUser.getId().toString());
+        savedUser.setFcm_token(token);
+
+        return userRepository.save(savedUser);
     }
 
     @Override
@@ -51,14 +57,17 @@ public class AuthServiceImpl implements AuthService {
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.getEmail());
+        User user = userRepository.findByEmail(loginDto.getEmail());
 
         if (userDetails.getAuthorities().stream()
                 .noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             throw new RuntimeException("User does not have admin privileges");
         }
 
-        return jwtUtil.generateToken(userDetails);
+        // Generate token with user ID
+        return jwtUtil.generateToken(userDetails, user.getId().toString());
     }
+
     @Override
     public String authenticateUserMobile(LoginDto loginDto) {
         try {
@@ -69,6 +78,9 @@ public class AuthServiceImpl implements AuthService {
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.getEmail());
-        return jwtUtil.generateToken(userDetails);
+        User user = userRepository.findByEmail(loginDto.getEmail());
+
+        // Generate token with user ID
+        return jwtUtil.generateToken(userDetails, user.getId().toString());
     }
 }
