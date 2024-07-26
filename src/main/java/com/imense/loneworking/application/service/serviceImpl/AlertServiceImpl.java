@@ -50,6 +50,9 @@ public class AlertServiceImpl implements AlertService {
         alert.setDuration(alertCreationDto.getDuration());
         Alert savedAlert =alertRepository.save(alert);
 
+        authUser.setStatus(alertCreationDto.getUser_status());
+        userRepository.save(authUser);
+
         AlertTableDto alertTableDto=new AlertTableDto();
         alertTableDto.setId(savedAlert.getId_alert());
         alertTableDto.setType(savedAlert.getAlert_type());

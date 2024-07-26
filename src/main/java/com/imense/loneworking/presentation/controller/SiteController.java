@@ -31,6 +31,7 @@ public class SiteController {
 
     @PutMapping("web/site/{id}")
     public Site updateSite(@PathVariable Long id, @RequestBody SiteCreationDto siteCreationDto) {
+        System.out.println(siteCreationDto);
         return siteService.updateSite(id, siteCreationDto);
     }
     @DeleteMapping("web/site/{id}")

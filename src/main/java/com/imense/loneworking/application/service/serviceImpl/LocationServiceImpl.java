@@ -49,6 +49,7 @@ public class LocationServiceImpl implements LocationService {
         Optional<User> user = userRepository.findById(locationUpdate.getUser_id());
         if (user.isPresent()) {
             user.get().setPosition(point);
+            user.get().setStatus(locationUpdate.getUser_status());
             userRepository.save(user.get());
             // Broadcast location update by site
             simpMessagingTemplate.convertAndSend(

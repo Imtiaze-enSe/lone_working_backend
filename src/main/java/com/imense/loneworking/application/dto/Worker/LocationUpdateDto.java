@@ -12,4 +12,5 @@ public class LocationUpdateDto {
     private Long site_id;
     private double latitude;
     private double longitude;
+    private String user_status;
 }
