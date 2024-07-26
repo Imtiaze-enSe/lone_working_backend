@@ -49,7 +49,7 @@ public class AlertServiceImpl implements AlertService {
         alert.setAlert_status(alertCreationDto.getAlert_status());
         alert.setDuration(alertCreationDto.getDuration());
         Alert savedAlert =alertRepository.save(alert);
-        
+
 
         AlertTableDto alertTableDto=new AlertTableDto();
         alertTableDto.setId(savedAlert.getId_alert());

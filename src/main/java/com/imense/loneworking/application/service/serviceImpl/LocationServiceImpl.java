@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.imense.loneworking.domain.repository.UserRepository;
 import com.imense.loneworking.infrastructure.websocket.WebSocketService;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -43,12 +44,14 @@ public class LocationServiceImpl implements LocationService {
 //        webSocketService.sendLocationUpdate(locationUpdate);
 //    }
 
-@Override
+    @Override
     public void processLocationUpdate(LocationUpdateDto locationUpdate) {
-        Point point = geometryFactory.createPoint(new Coordinate(locationUpdate.getLongitude(), locationUpdate.getLatitude()));
         Optional<User> user = userRepository.findById(locationUpdate.getUser_id());
         if (user.isPresent()) {
-            user.get().setPosition(point);
+            if (!Objects.equals(locationUpdate.getUser_status(), "Disconnected")) {
+                Point point = geometryFactory.createPoint(new Coordinate(locationUpdate.getLongitude(), locationUpdate.getLatitude()));
+                user.get().setPosition(point);
+            }
             user.get().setStatus(locationUpdate.getUser_status());
             userRepository.save(user.get());
             // Broadcast location update by site
