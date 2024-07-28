@@ -53,10 +53,10 @@ public class Tenant {
     private Date updated_at;
     private Date deleted_at;
 
-    @OneToMany(mappedBy = "tenant")
+    @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Site> sites;
 
-    @OneToMany(mappedBy = "tenant")
+    @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<User> users;
 

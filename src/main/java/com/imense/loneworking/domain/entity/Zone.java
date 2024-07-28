@@ -41,7 +41,7 @@ public class Zone {
     private Site site;
 
 
-    @OneToMany(mappedBy = "zone")
+    @OneToMany(mappedBy = "zone", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<QrCode> qrCodes;
 

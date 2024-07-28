@@ -80,11 +80,11 @@ public class User implements UserDetails {
     @JoinColumn(name = "tenant_id")
     private Tenant tenant;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Alert> alerts;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Notification> notifications;
 

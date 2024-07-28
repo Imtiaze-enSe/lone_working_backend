@@ -105,6 +105,7 @@ public class SiteServiceImpl implements SiteService {
     @Override
     @Transactional
     public void deleteSite(Long siteId) {
+        userRepository.deleteUsersBySiteId(siteId);
         siteRepository.deleteById(siteId);
     }
 

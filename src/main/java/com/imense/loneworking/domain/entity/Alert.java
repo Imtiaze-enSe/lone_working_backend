@@ -33,7 +33,7 @@ public class Alert {
     @JsonManagedReference
     private List<Update> updates;
 
-    @OneToMany(mappedBy = "alert")
+    @OneToMany(mappedBy = "alert", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Note> notes;
 

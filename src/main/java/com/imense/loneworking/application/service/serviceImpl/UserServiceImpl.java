@@ -99,7 +99,11 @@ public class UserServiceImpl implements UserService {
             workerDto.setCreated_at(user.getCreated_at());
 
             workerDto.setFunction(user.getFunction());
-            workerDto.setSite_name(siteRepository.findById(user.getSiteId()).get().getName());
+            // Check if site exists before accessing the name
+            siteRepository.findById(user.getSiteId()).ifPresentOrElse(
+                    site -> workerDto.setSite_name(site.getName()),
+                    () -> workerDto.setSite_name(null) // or handle the absence as appropriate
+            );
             workerDto.setAddress(user.getAddress());
             workerDto.setContact_person_phone(user.getContact_person_phone());
             workerDto.setContact_person(user.getContact_person());
