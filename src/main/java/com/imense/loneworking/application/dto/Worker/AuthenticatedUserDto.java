@@ -19,4 +19,7 @@ public class AuthenticatedUserDto {
     private String password;
     private Long site_id;
     private String company_logo;
+    private String company_name;
+    private String company_email;
+    private String company_phone;
 }
