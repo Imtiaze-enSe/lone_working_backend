@@ -13,4 +13,8 @@ public class AlertCreationDto {
     private String alert_type;
     private int duration;
     private String alert_created_by;
+    private String zone;
+    private String level;
+    private String room;
+    private String interior;
 }

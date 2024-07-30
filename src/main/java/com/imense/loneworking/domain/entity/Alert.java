@@ -22,7 +22,11 @@ public class Alert {
     private String alert_type;
     private LocalDateTime alert_created_at;
     private LocalDateTime alert_updated_at;
-    private Integer duration;
+    private int duration;
+    private String zone;
+    private String level;
+    private String room;
+    private String interior;
 
     @ManyToOne
     @JoinColumn(name = "id")

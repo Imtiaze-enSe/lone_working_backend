@@ -58,6 +58,7 @@ public class User implements UserDetails {
     private LocalDateTime deleted_at;
 
     private Geometry position;
+
     private String zone;
     private String level;
     private String room;

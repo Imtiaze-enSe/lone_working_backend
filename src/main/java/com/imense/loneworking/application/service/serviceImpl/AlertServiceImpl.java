@@ -48,6 +48,10 @@ public class AlertServiceImpl implements AlertService {
         alert.setAlert_type(alertCreationDto.getAlert_type());
         alert.setAlert_status(alertCreationDto.getAlert_status());
         alert.setDuration(alertCreationDto.getDuration());
+        alert.setZone(alertCreationDto.getZone());
+        alert.setLevel(alertCreationDto.getLevel());
+        alert.setRoom(alertCreationDto.getRoom());
+        alert.setInterior(alertCreationDto.getInterior());
         Alert savedAlert =alertRepository.save(alert);
 
 
@@ -57,6 +61,9 @@ public class AlertServiceImpl implements AlertService {
         alertTableDto.setStatus(savedAlert.getAlert_status());
         alertTableDto.setCreatedAt(savedAlert.getAlert_created_at());
         alertTableDto.setCreatedBy(savedAlert.getUser().getFirst_name()+" "+savedAlert.getUser().getLast_name());
+        alertTableDto.setZone(alertCreationDto.getZone());
+        alertTableDto.setLevel(alertCreationDto.getLevel());
+        alertTableDto.setRoom(alertCreationDto.getRoom());
         simpMessagingTemplate.convertAndSend(
                 "/topic/alerts/site/" + authUser.getSiteId(),
                 alertTableDto
@@ -69,8 +76,6 @@ public class AlertServiceImpl implements AlertService {
         return alertTableDto;
 
     }
-
-
     @Override
     public List<AlertTableDto> getAlertForTable() {
         String username = getCurrentUsername();
@@ -79,7 +84,7 @@ public class AlertServiceImpl implements AlertService {
         List<Alert> alerts = alertRepository.findByUserSiteId(siteId);
 
         // Convert alerts to AlertTableDto
-        List<AlertTableDto> alertTableDtos = alerts.stream().map(alert -> {
+        return alerts.stream().map(alert -> {
             AlertTableDto dto = new AlertTableDto();
             dto.setId(alert.getId_alert());
             dto.setType(alert.getAlert_type());
@@ -88,8 +93,6 @@ public class AlertServiceImpl implements AlertService {
             dto.setCreatedAt(alert.getAlert_created_at());
             return dto;
         }).collect(Collectors.toList());
-
-        return alertTableDtos;
     }
     @Override
     public void deleteAlert(Long alertId) {

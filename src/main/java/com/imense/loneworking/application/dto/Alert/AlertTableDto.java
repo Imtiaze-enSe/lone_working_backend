@@ -19,6 +19,11 @@ public class AlertTableDto {
     private String createdBy;
     private String status;
     private String type;
+    private int duration;
+    private String zone;
+    private String level;
+    private String room;
+    private String interior;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern="yyyy-MM-dd HH:mm")
