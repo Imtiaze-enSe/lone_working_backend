@@ -64,6 +64,7 @@ public class AlertServiceImpl implements AlertService {
         alertTableDto.setZone(alertCreationDto.getZone());
         alertTableDto.setLevel(alertCreationDto.getLevel());
         alertTableDto.setRoom(alertCreationDto.getRoom());
+        alertTableDto.setInterior(alertCreationDto.getInterior());
         simpMessagingTemplate.convertAndSend(
                 "/topic/alerts/site/" + authUser.getSiteId(),
                 alertTableDto
@@ -91,6 +92,10 @@ public class AlertServiceImpl implements AlertService {
             dto.setStatus(alert.getAlert_status());
             dto.setCreatedBy(alert.getUser().getFirst_name()+" "+alert.getUser().getLast_name());
             dto.setCreatedAt(alert.getAlert_created_at());
+            dto.setInterior(alert.getInterior());
+            dto.setLevel(alert.getLevel());
+            dto.setZone(alert.getZone());
+            dto.setRoom(alert.getRoom());
             return dto;
         }).collect(Collectors.toList());
     }
