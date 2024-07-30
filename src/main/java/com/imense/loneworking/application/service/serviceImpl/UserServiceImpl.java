@@ -161,6 +161,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(workerCreationDto.getPassword()));
         user.setPhone(workerCreationDto.getPhone());
         user.setTenant(tenant);
+        user.setStatus("Disconnected");
         user.setDepartment(workerCreationDto.getDepartment());
         user.setFunction(workerCreationDto.getFunction());
         user.setReport_to(workerCreationDto.getReport_to());
@@ -236,6 +237,9 @@ public class UserServiceImpl implements UserService {
         authenticatedUserDto.setFunction(authUser.getFunction());
         authenticatedUserDto.setAddress(authUser.getAddress());
         authenticatedUserDto.setSite_id(authUser.getSiteId());
+        authenticatedUserDto.setCompany_name(authUser.getTenant().getName());
+        authenticatedUserDto.setCompany_email(authUser.getTenant().getEmail());
+        authenticatedUserDto.setCompany_phone(authUser.getTenant().getPhone());
         return authenticatedUserDto;
 
     }
