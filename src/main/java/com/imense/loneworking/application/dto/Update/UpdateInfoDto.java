@@ -18,6 +18,7 @@ public class UpdateInfoDto {
     private Long alert_id;
     private String title;
     private String message;
+    private Integer extended_duration;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime update_created_at;

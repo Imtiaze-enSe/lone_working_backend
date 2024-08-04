@@ -5,13 +5,16 @@ import com.imense.loneworking.application.dto.Update.UpdateInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.UpdateService;
 import com.imense.loneworking.domain.entity.Alert;
 import com.imense.loneworking.domain.entity.Update;
+import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.domain.repository.AlertRepository;
 import com.imense.loneworking.domain.repository.UpdateRepository;
+import com.imense.loneworking.domain.repository.UserRepository;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -19,11 +22,13 @@ public class UpdateServiceImpl implements UpdateService {
     private final UpdateRepository updateRepository;
     private final AlertRepository alertRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final UserRepository userRepository;
 
-    public UpdateServiceImpl(UpdateRepository updateRepository,AlertRepository alertRepository,SimpMessagingTemplate simpMessagingTemplate) {
+    public UpdateServiceImpl(UpdateRepository updateRepository, AlertRepository alertRepository, SimpMessagingTemplate simpMessagingTemplate, UserRepository userRepository) {
         this.updateRepository = updateRepository;
         this.alertRepository=alertRepository;
         this.simpMessagingTemplate =simpMessagingTemplate;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -31,6 +36,15 @@ public class UpdateServiceImpl implements UpdateService {
         Optional<Alert> alert=alertRepository.findById(updateCreationDto.getAlert_id());
 
         if(alert.isPresent()){
+            if(Objects.equals(updateCreationDto.getTitle(), "Task Duration extended")){
+                alert.get().setDuration(alert.get().getDuration() + updateCreationDto.getExtended_duration());
+                alert.ifPresent(alertRepository::save);
+            }
+            if (Objects.equals(updateCreationDto.getTitle(), "Alert has been closed.")){
+                alert.get().setAlert_status("Closed");
+                alert.ifPresent(alertRepository::save);
+            }
+            System.out.println(alert.get().getAlert_status());
             Update update=new Update();
             update.setAlert(alert.get());
             update.setTitle(updateCreationDto.getTitle());
@@ -43,8 +57,8 @@ public class UpdateServiceImpl implements UpdateService {
             updateInfoDto.setAlert_id(savedUpdate.getAlert().getId_alert());
             updateInfoDto.setUpdate_id(savedUpdate.getId_update());
             updateInfoDto.setUpdate_created_at(savedUpdate.getUpdate_created_at());
-
-
+            updateInfoDto.setExtended_duration(updateCreationDto.getExtended_duration());
+            System.out.println(updateInfoDto);
             simpMessagingTemplate.convertAndSend(
                     "/topic/updates/alert/" + update.getAlert().getId_alert(),
                     updateInfoDto

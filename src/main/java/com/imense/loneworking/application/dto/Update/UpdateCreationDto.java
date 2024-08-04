@@ -11,4 +11,5 @@ public class UpdateCreationDto {
     private Long alert_id;
     private String title;
     private String message;
+    private Integer extended_duration;
 }
