@@ -52,7 +52,7 @@ public class AlertServiceImpl implements AlertService {
         alert.setLevel(alertCreationDto.getLevel());
         alert.setRoom(alertCreationDto.getRoom());
         alert.setInterior(alertCreationDto.getInterior());
-        alert.setEquipment(alert.getEquipment());
+        alert.setEquipment(alertCreationDto.getEquipment());
         Alert savedAlert =alertRepository.save(alert);
 
 
