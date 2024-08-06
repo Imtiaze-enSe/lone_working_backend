@@ -27,13 +27,14 @@ public class Alert {
     private String level;
     private String room;
     private String interior;
+    private String equipment;
 
     @ManyToOne
     @JoinColumn(name = "id")
     @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "alert")
+    @OneToMany(mappedBy = "alert", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Update> updates;
 

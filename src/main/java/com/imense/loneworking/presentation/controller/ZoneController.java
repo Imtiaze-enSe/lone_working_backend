@@ -50,4 +50,9 @@ public class ZoneController {
     public List<ZoneQrCodeDto>getZoneInfoQrCode(@PathVariable Long site_id){
         return zoneService.getZoneInfoQrCode(site_id);
     }
+
+    @GetMapping("mobile/zones/site_id:{site_id}")
+    public List<ZoneQrCodeDto>getZoneInfoForMobile(@PathVariable Long site_id){
+        return zoneService.getZoneInfoQrCode(site_id);
+    }
 }

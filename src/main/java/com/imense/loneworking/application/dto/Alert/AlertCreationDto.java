@@ -17,4 +17,5 @@ public class AlertCreationDto {
     private String level;
     private String room;
     private String interior;
+    private String equipment;
 }
