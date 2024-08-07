@@ -1,9 +1,6 @@
 package com.imense.loneworking.application.service.serviceImpl;
 
-import com.imense.loneworking.application.dto.Alert.AlertCreationDto;
-import com.imense.loneworking.application.dto.Alert.AlertTableDto;
-import com.imense.loneworking.application.dto.Alert.AlertTrackerDto;
-import com.imense.loneworking.application.dto.Alert.UserInfoAlertDto;
+import com.imense.loneworking.application.dto.Alert.*;
 import com.imense.loneworking.application.service.serviceInterface.AlertService;
 import com.imense.loneworking.domain.entity.Alert;
 import com.imense.loneworking.domain.entity.Enum.UserRole;
@@ -67,6 +64,7 @@ public class AlertServiceImpl implements AlertService {
         alertTableDto.setRoom(alertCreationDto.getRoom());
         alertTableDto.setInterior(alertCreationDto.getInterior());
         alertTableDto.setEquipment(alertCreationDto.getEquipment());
+        alertTableDto.setDuration(alertCreationDto.getDuration());
         simpMessagingTemplate.convertAndSend(
                 "/topic/alerts/site/" + authUser.getSiteId(),
                 alertTableDto
@@ -123,6 +121,32 @@ public class AlertServiceImpl implements AlertService {
             userInfoAlertDto.setProfile_photo(null);
         }
         return userInfoAlertDto;
+    }
+
+    @Override
+    public List<AlertTableDto> getAlertHistoryForUser() {
+        String username = getCurrentUsername();
+        User user = userRepository.findByEmail(username);
+        List<Alert> alerts= user.getAlerts();
+
+        // Convert alerts to AlertTableDto
+        return getAlertTableDtos(alerts);
+    }
+
+    private List<AlertTableDto> getAlertTableDtos(List<Alert> alerts) {
+        return alerts.stream().map(alert -> {
+            AlertTableDto dto = new AlertTableDto();
+            dto.setId(alert.getId_alert());
+            dto.setType(alert.getAlert_type());
+            dto.setStatus(alert.getAlert_status());
+            dto.setCreatedBy(alert.getUser().getFirst_name()+" "+alert.getUser().getLast_name());
+            dto.setCreatedAt(alert.getAlert_created_at());
+            dto.setInterior(alert.getInterior());
+            dto.setLevel(alert.getLevel());
+            dto.setZone(alert.getZone());
+            dto.setRoom(alert.getRoom());
+            return dto;
+        }).collect(Collectors.toList());
     }
 
 

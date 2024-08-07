@@ -22,6 +22,10 @@ public class UpdateController {
     public List<UpdateInfoDto> getUpdates(@PathVariable Long id){
         return updateService.getUpdates(id);
     }
+    @GetMapping("/mobile/alert/updates/{id}")
+    public List<UpdateInfoDto> getUpdatesMobile(@PathVariable Long id){
+        return updateService.getUpdates(id);
+    }
 
 
 }

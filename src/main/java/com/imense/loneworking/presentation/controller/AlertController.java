@@ -36,4 +36,9 @@ public class AlertController {
     public Alert closeAlert(@PathVariable Long id){
         return alertService.closeAlert(id);
     }
+
+    @GetMapping("/mobile/user/alerts")
+    public List<AlertTableDto> getAlertHistoryForUser(){
+        return alertService.getAlertHistoryForUser();
+    }
 }
