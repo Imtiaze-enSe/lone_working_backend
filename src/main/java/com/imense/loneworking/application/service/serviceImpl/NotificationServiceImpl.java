@@ -71,7 +71,7 @@ public class NotificationServiceImpl implements NotificationService {
             if (targetUser != null) {
                 System.out.println("Sending to specific user: " + targetUser.getEmail());
                 simpMessagingTemplate.convertAndSend(
-                        "/topic/notifications/site/" + notificationCreationDto.getSite_id() + "/" + notificationCreationDto.getSent_to(),
+                        "/topic/notifications/site/" + notificationCreationDto.getSite_id() + "/" + targetUser.getId(),
                         notificationWithId
                 );
             }
