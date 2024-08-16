@@ -58,7 +58,6 @@ public class UserController {
     }
     @GetMapping("mobile/worker/authenticated")
     public AuthenticatedUserDto getAuthenticatedUserMobile(){
-        System.out.println("Hellooooo");
         return userService.getAuthenticatedUser();
     }
 

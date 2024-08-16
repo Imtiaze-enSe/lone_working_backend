@@ -22,11 +22,6 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-//    @PostMapping("web/notification")
-//    public Notification addNotification(@RequestBody NotificationCreationDto notificationCreationDto){
-//        return  notificationService.addNotification(notificationCreationDto);
-//    }
-
     @GetMapping("web/notifications")
     public List<NotificationInfoDto> getAllNotifications(){
         return notificationService.getAllNotifications();
@@ -36,17 +31,4 @@ public class NotificationController {
         notificationService.deleteNotification(id);
     }
 
-//    // mapped as application/send
-//    @MessageMapping("/send")
-//    @SendTo("/all/notifications")
-//    public String sendNotification(String message) {
-//        System.out.println(message);
-//        return message;
-//    }
-//    // mapped as application/private
-//    @MessageMapping("/private")
-//    public NotificationCreationDto sendToSpeceficUser(@Payload NotificationCreationDto notification) {
-//        simpMessagingTemplate.convertAndSendToUser(notification.getSent_to(), "/specific", notification);
-//        return notification;
-//    }
 }
