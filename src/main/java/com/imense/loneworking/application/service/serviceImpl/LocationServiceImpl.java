@@ -28,22 +28,6 @@ public class LocationServiceImpl implements LocationService {
         this.geometryFactory = new GeometryFactory();
     }
 
-//    @Override
-//    public void processLocationUpdate(LocationUpdateDto locationUpdate) {
-//        System.out.println("Processing location update: " + locationUpdate);  // Add this line
-//        // Create a Point geometry from the latitude and longitude
-//        Point point = geometryFactory.createPoint(new Coordinate(locationUpdate.getLongitude(), locationUpdate.getLatitude()));
-//        System.out.println(point);
-//        // Update the user's position in the database
-//        User user = userRepository.findByEmail(locationUpdate.getUserEmail());
-//        if (user != null){
-//            user.setPosition(point);
-//            userRepository.save(user);
-//        }
-//        // Forward the location update to the web frontend
-//        webSocketService.sendLocationUpdate(locationUpdate);
-//    }
-
     @Override
     public void processLocationUpdate(LocationUpdateDto locationUpdate) {
         Optional<User> user = userRepository.findById(locationUpdate.getUser_id());
