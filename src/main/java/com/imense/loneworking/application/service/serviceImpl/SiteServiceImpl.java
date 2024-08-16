@@ -95,8 +95,11 @@ public class SiteServiceImpl implements SiteService {
 
         site.setName(siteCreationDto.getSiteName());
         site.setLocation(siteCreationDto.getLocation());
-        site.setPlan2d(siteCreationDto.getPlan2d());
-        site.setPlan3d(siteCreationDto.getPlan3d());
+        if(siteCreationDto.getPlan2d() != null){
+            site.setPlan2d(siteCreationDto.getPlan2d());
+        }
+        if(siteCreationDto.getPlan3d() != null){site.setPlan3d(siteCreationDto.getPlan3d());}
+
         site.setTenant(tenant);
         site.setUpdated_at(LocalDateTime.now());
 
