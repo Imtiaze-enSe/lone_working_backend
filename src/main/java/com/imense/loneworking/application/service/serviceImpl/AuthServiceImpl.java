@@ -7,6 +7,10 @@ import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.domain.repository.UserRepository;
 import com.imense.loneworking.infrastructure.security.JwtUtil;
 import com.imense.loneworking.presentation.response.InvalidPinException;
+
+import com.imense.loneworking.presentation.response.ExpiredTokenException;
+import com.imense.loneworking.presentation.response.InvalidPinException;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -15,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Objects;
 
@@ -97,11 +103,13 @@ public class AuthServiceImpl implements AuthService {
         String username = getCurrentUsername();
         User user = userRepository.findByEmail(username);
 
-        System.out.println(user.getPin());
-        System.out.println(pin);
-
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
+        }
+
+        // Check if the JWT token is expired
+        if (jwtUtil.isTokenExpired(getCurrentToken())) {
+            throw new ExpiredTokenException("Session expired. Please log in again.");
         }
 
         // Validate the PIN
@@ -114,5 +122,14 @@ public class AuthServiceImpl implements AuthService {
         return jwtUtil.generateToken(userDetails, user.getId().toString());
     }
 
+
+    private String getCurrentToken() {
+        String authHeader = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
+                .getRequest().getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);  // Remove "Bearer " prefix
+        }
+        return null;
+    }
 
 }

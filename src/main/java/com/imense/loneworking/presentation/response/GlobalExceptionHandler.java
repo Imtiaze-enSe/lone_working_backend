@@ -26,4 +26,8 @@ public class GlobalExceptionHandler {
         // Handle any other exceptions by returning a 500 Internal Server Error response
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + ex.getMessage());
     }
+    @ExceptionHandler(ExpiredTokenException.class)
+    public ResponseEntity<String> handleExpiredTokenException(ExpiredTokenException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
 }
