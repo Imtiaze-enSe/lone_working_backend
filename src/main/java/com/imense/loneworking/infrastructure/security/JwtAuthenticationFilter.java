@@ -37,29 +37,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;
-<<<<<<< Updated upstream
-        String userId;
-=======
-<<<<<<< Updated upstream
-        Long userId = null;
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
         String jwt = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
-<<<<<<< Updated upstream
-            userId = jwtUtil.extractUserId(jwt);
-=======
-<<<<<<< Updated upstream
-            logger.info("JWT Token: " + jwt);
->>>>>>> Stashed changes
-            logger.info("Username extracted: " + username);
-            logger.info("UserId extracted: " + userId);
-=======
->>>>>>> Stashed changes
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
