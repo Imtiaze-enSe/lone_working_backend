@@ -6,6 +6,7 @@ import com.imense.loneworking.domain.entity.Enum.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -83,10 +84,12 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @ToString.Exclude
     private List<Alert> alerts;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @ToString.Exclude
     private List<Notification> notifications;
 
     @Enumerated(EnumType.STRING)

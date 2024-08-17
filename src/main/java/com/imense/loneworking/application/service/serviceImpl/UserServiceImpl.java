@@ -26,14 +26,12 @@ import static com.imense.loneworking.domain.entity.Enum.UserRole.WORKER;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final SiteRepository siteRepository;
-    private final TenantRepository tenantRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, SiteRepository siteRepository,
                            TenantRepository tenantRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.siteRepository = siteRepository;
-        this.tenantRepository = tenantRepository;
         this.passwordEncoder = passwordEncoder;
     }
     private String getCurrentUsername() {
@@ -214,7 +212,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public AuthenticatedUserDto getAuthenticatedUser() {
         String username = getCurrentUsername();
-        System.out.println("Helloooo : " + username);
         User authUser = userRepository.findByEmail(username);
         AuthenticatedUserDto authenticatedUserDto=new AuthenticatedUserDto();
         authenticatedUserDto.setId(authUser.getId());

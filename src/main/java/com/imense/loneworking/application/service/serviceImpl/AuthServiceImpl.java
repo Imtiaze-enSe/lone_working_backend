@@ -6,12 +6,23 @@ import com.imense.loneworking.application.service.serviceInterface.AuthService;
 import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.domain.repository.UserRepository;
 import com.imense.loneworking.infrastructure.security.JwtUtil;
+import com.imense.loneworking.presentation.response.InvalidPinException;
+
+import com.imense.loneworking.presentation.response.ExpiredTokenException;
+import com.imense.loneworking.presentation.response.InvalidPinException;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.util.Objects;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -29,7 +40,10 @@ public class AuthServiceImpl implements AuthService {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
     }
-
+    private String getCurrentUsername() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails.getUsername();
+    }
     @Override
     public User registerUser(RegistrationDto registrationDto) {
         User user = new User();
@@ -83,4 +97,39 @@ public class AuthServiceImpl implements AuthService {
         // Generate token with user ID
         return jwtUtil.generateToken(userDetails, user.getId().toString());
     }
+
+    @Override
+    public String authenticateUserMobilePin(String pin) {
+        String username = getCurrentUsername();
+        User user = userRepository.findByEmail(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        // Check if the JWT token is expired
+        if (jwtUtil.isTokenExpired(getCurrentToken())) {
+            throw new ExpiredTokenException("Session expired. Please log in again.");
+        }
+
+        // Validate the PIN
+        if (!Objects.equals(user.getPin(), pin)) {
+            throw new InvalidPinException("Invalid PIN");
+        }
+
+        // Generate a new JWT token with the user ID
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        return jwtUtil.generateToken(userDetails, user.getId().toString());
+    }
+
+
+    private String getCurrentToken() {
+        String authHeader = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
+                .getRequest().getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);  // Remove "Bearer " prefix
+        }
+        return null;
+    }
+
 }
