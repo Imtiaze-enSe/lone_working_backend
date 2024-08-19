@@ -29,9 +29,9 @@ public class NotificationController {
 
 
     @PostMapping("web/notifications/nearby-workers/{id}")
-    public ResponseEntity<Void> notifyNearbyWorkers(@PathVariable Long id) {
+    public ResponseEntity<Void> notifyNearbyWorkers(@PathVariable Long id, @RequestParam Long id_alert) {
         try {
-            notificationService.nearbyWorkers(id);
+            notificationService.nearbyWorkers(id, id_alert);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

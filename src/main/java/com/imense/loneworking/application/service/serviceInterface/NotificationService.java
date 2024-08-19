@@ -16,5 +16,5 @@ public interface NotificationService {
 
     void sendNotification(NotificationCreationDto notificationCreationDto);
 
-    void nearbyWorkers(Long id);
+    void nearbyWorkers(Long id, Long id_alert);
 }

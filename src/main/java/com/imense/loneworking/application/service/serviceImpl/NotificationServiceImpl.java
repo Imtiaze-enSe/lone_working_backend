@@ -9,6 +9,7 @@ import com.imense.loneworking.domain.entity.Notification;
 import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.domain.repository.NotificationRepository;
 import com.imense.loneworking.domain.repository.UserRepository;
+import io.micrometer.common.lang.Nullable;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,7 +52,7 @@ public class NotificationServiceImpl implements NotificationService {
         Notification savedNotification = notificationRepository.save(notification);
 
         // Prepare notification data including ID
-        NotificationBroadcastDto notificationWithId = getNotificationBroadcastDto(notificationCreationDto, savedNotification);
+        NotificationBroadcastDto notificationWithId = getNotificationBroadcastDto(notificationCreationDto, savedNotification, null);
 
 
         if ("all".equalsIgnoreCase(notificationCreationDto.getSent_to())) {
@@ -103,7 +104,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void nearbyWorkers(Long id) {
+    public void nearbyWorkers(Long id, Long id_alert) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -133,12 +134,12 @@ public class NotificationServiceImpl implements NotificationService {
             for (User worker : nearestWorkers) {
                 System.out.println(worker.toString());
                 notification.setSent_to(worker.getEmail());
-                sendNotificationToUser(notification, worker.getId());
+                sendNotificationToUser(notification, worker.getId(), id_alert);
             }
         }
     }
     // method to send notifications to a specific user
-    private void sendNotificationToUser(NotificationCreationDto notification, Long workerId) {
+    private void sendNotificationToUser(NotificationCreationDto notification, Long workerId, Long id_alert) {
         Notification SavedNotification = new Notification();
         SavedNotification.setNotification_title(notification.getTitle());
         SavedNotification.setNotification_message(notification.getMessage());
@@ -149,7 +150,7 @@ public class NotificationServiceImpl implements NotificationService {
         Notification savedNotification = notificationRepository.save(SavedNotification);
 
         // Prepare notification data
-        NotificationBroadcastDto notificationBroadcast = getNotificationBroadcastDto(notification, savedNotification);
+        NotificationBroadcastDto notificationBroadcast = getNotificationBroadcastDto(notification, savedNotification, id_alert);
 
         // Send to the specific user
         simpMessagingTemplate.convertAndSend(
@@ -158,7 +159,7 @@ public class NotificationServiceImpl implements NotificationService {
         );
     }
 
-    private static NotificationBroadcastDto getNotificationBroadcastDto(NotificationCreationDto notification, Notification savedNotification) {
+    private static NotificationBroadcastDto getNotificationBroadcastDto(NotificationCreationDto notification, Notification savedNotification, @Nullable Long id_alert) {
         NotificationBroadcastDto notificationBroadcast = new NotificationBroadcastDto();
         notificationBroadcast.setId(savedNotification.getId_notification());
         notificationBroadcast.setTitle(notification.getTitle());
@@ -166,6 +167,9 @@ public class NotificationServiceImpl implements NotificationService {
         notificationBroadcast.setSent_by(notification.getSent_by());
         notificationBroadcast.setSent_to(notification.getSent_to());
         notificationBroadcast.setSite_id(notification.getSite_id());
+        if (id_alert != null){
+            notificationBroadcast.setAlert_id(id_alert);
+        }
         return notificationBroadcast;
     }
 

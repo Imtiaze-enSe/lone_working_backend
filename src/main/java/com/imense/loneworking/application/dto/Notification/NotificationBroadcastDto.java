@@ -9,10 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NotificationBroadcastDto {
-    private Long id; // Notification ID
+    private Long id;
     private String title;
     private String message;
     private String sent_by;
     private String sent_to;
     private Long site_id;
+    private Long alert_id;
 }
