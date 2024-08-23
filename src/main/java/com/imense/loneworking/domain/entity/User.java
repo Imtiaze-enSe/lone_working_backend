@@ -48,6 +48,7 @@ public class User implements UserDetails {
     private String password;
     private Boolean contact;
     private String remember_token;
+    private String company_name;
     @Lob
     private String fcm_token;
 
@@ -70,6 +71,7 @@ public class User implements UserDetails {
     private String function;
 
     // health info
+    private String drugs;
     private String blood_type;
     private String diseases;
     private String medications;

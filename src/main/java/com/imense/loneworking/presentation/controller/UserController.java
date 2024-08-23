@@ -81,4 +81,17 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
         }
     }
+    @GetMapping("mobile/worker/settings")
+    public EditProfileMobileDto getEditProfileUser(){
+        return userService.getUserForMobileSettings();
+    }
+    @PutMapping("mobile/worker/settings")
+    public ResponseEntity<User> settingsMobile(@RequestBody EditProfileMobileDto editProfileMobileDto){
+        User updatedUser = userService.settingsMobile(editProfileMobileDto);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser); // Return 200 OK with the updated user object
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
+        }
+    }
 }
