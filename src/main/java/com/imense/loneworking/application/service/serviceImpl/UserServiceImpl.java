@@ -353,8 +353,48 @@ public class UserServiceImpl implements UserService {
         Optional.ofNullable(editProfileMobileDto.getMedications()).ifPresent(user::setMedications);
         Optional.ofNullable(editProfileMobileDto.getDrugs()).ifPresent(user::setDrugs);
         Optional.ofNullable(editProfileMobileDto.getDiseases()).ifPresent(user::setDiseases);
+        Optional.ofNullable(editProfileMobileDto.getPin()).ifPresent(user::setPin);
+        Optional.ofNullable(editProfileMobileDto.getBlood_type()).ifPresent(user::setBlood_type);
 
         return userRepository.save(user);
     }
 
+    @Override
+    public PinSettingsDto getPinSettings() {
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        PinSettingsDto pinSettingsDto = new PinSettingsDto();
+        pinSettingsDto.setPin(authUser.getPin());
+        return pinSettingsDto;
+    }
+
+    @Override
+    public User updateUserPin(PinSettingsDto pinSettingsDto) {
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        authUser.setPin(pinSettingsDto.getPin());
+        return userRepository.save(authUser);
+    }
+
+    @Override
+    public UserTermsDto getUserTerms() {
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        UserTermsDto userTermsDto = new UserTermsDto();
+        if(authUser.getTerms_accepted() != null) {
+            userTermsDto.setTerms_accepted(authUser.getTerms_accepted());
+        }
+        else {
+        userTermsDto.setTerms_accepted(false);}
+
+        return userTermsDto;
+    }
+
+    @Override
+    public User updateUserTerms(UserTermsDto userTermsDto) {
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        authUser.setTerms_accepted(userTermsDto.getTerms_accepted());
+        return userRepository.save(authUser);
+    }
 }
