@@ -52,9 +52,6 @@ public class UserServiceImpl implements UserService {
             userDto.setSite_id(user.getSiteId());
             userDto.setStatus(String.valueOf(user.getStatus()));
             userDto.setPhone(user.getPhone());
-            userDto.setZone(user.getZone());
-            userDto.setLevel(user.getLevel());
-            userDto.setRoom(user.getRoom());
             if (user.getProfile_photo() != null) {
                 userDto.setProfile_photo(Base64.getEncoder().encodeToString(user.getProfile_photo()));
             } else {

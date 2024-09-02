@@ -61,9 +61,6 @@ public class User implements UserDetails {
 
     private Geometry position;
 
-    private String zone;
-    private String level;
-    private String room;
     private String address;
     private String contact_person;
     private String contact_person_phone;

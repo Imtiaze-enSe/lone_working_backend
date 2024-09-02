@@ -37,7 +37,7 @@ public class AuthController {
 
     @PostMapping("auth/loginweb")
     public String loginWeb(@RequestBody LoginDto loginDto) {
-        System.out.println(loginDto);
         return authService.authenticateUserWeb(loginDto);
     }
+
 }
