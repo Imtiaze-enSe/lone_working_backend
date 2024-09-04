@@ -26,14 +26,12 @@ import static com.imense.loneworking.domain.entity.Enum.UserRole.WORKER;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final SiteRepository siteRepository;
-    private final TenantRepository tenantRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, SiteRepository siteRepository,
                            TenantRepository tenantRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.siteRepository = siteRepository;
-        this.tenantRepository = tenantRepository;
         this.passwordEncoder = passwordEncoder;
     }
     private String getCurrentUsername() {
@@ -54,9 +52,6 @@ public class UserServiceImpl implements UserService {
             userDto.setSite_id(user.getSiteId());
             userDto.setStatus(String.valueOf(user.getStatus()));
             userDto.setPhone(user.getPhone());
-            userDto.setZone(user.getZone());
-            userDto.setLevel(user.getLevel());
-            userDto.setRoom(user.getRoom());
             if (user.getProfile_photo() != null) {
                 userDto.setProfile_photo(Base64.getEncoder().encodeToString(user.getProfile_photo()));
             } else {
@@ -214,7 +209,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public AuthenticatedUserDto getAuthenticatedUser() {
         String username = getCurrentUsername();
-        System.out.println("Helloooo : " + username);
         User authUser = userRepository.findByEmail(username);
         AuthenticatedUserDto authenticatedUserDto=new AuthenticatedUserDto();
         authenticatedUserDto.setId(authUser.getId());
@@ -262,6 +256,52 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public EditProfileMobileDto getUserForMobileSettings() {
+        // Get the current authenticated username
+        String username = getCurrentUsername();
+
+        // Find the user by their email (which is the username)
+        User authUser = userRepository.findByEmail(username);
+
+        // Create a new EditProfileMobileDto and populate it with the user's current details
+        EditProfileMobileDto editProfileMobileDto = new EditProfileMobileDto();
+        editProfileMobileDto.setId(authUser.getId());
+        if (authUser.getProfile_photo() != null) {
+            editProfileMobileDto.setProfile_photo(Base64.getEncoder().encodeToString(authUser.getProfile_photo()));
+        } else {
+            editProfileMobileDto.setProfile_photo(null);
+        }
+        if (authUser.getCompany_logo() != null) {
+            editProfileMobileDto.setCompany_logo(Base64.getEncoder().encodeToString(authUser.getCompany_logo()));
+        } else {
+            editProfileMobileDto.setCompany_logo(null);
+        }
+        editProfileMobileDto.setFirst_name(authUser.getFirst_name());
+        editProfileMobileDto.setLast_name(authUser.getLast_name());
+        editProfileMobileDto.setEmail(authUser.getEmail());
+        editProfileMobileDto.setPhone(authUser.getPhone());
+        editProfileMobileDto.setFunction(authUser.getFunction());
+        editProfileMobileDto.setAddress(authUser.getAddress());
+        //editProfileMobileDto.setPassword(authUser.getPassword());
+        editProfileMobileDto.setContact_person(authUser.getContact_person());
+        editProfileMobileDto.setContact_person_phone(authUser.getContact_person_phone());
+        editProfileMobileDto.setReport_to(authUser.getReport_to());
+        editProfileMobileDto.setCompany_name(authUser.getTenant().getName());
+        editProfileMobileDto.setBlood_type(authUser.getBlood_type());
+        editProfileMobileDto.setDiseases(authUser.getDiseases());
+        editProfileMobileDto.setMedications(authUser.getMedications());
+        editProfileMobileDto.setAlcoholic(authUser.getAlcoholic());
+        editProfileMobileDto.setSmoking(authUser.getSmoking());
+        editProfileMobileDto.setPin(authUser.getPin());
+        editProfileMobileDto.setCompany_name(authUser.getCompany_name());
+        editProfileMobileDto.setDrugs(authUser.getDrugs());
+        editProfileMobileDto.setDiseases(authUser.getDiseases());
+
+        // Return the populated EditProfileMobileDto
+        return editProfileMobileDto;
+    }
+
 
     @Override
     public User changePasswordUser(ChangePasswordDto changePasswordDto) {
@@ -280,5 +320,78 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(user);
     }
+    @Override
+    public User settingsMobile(EditProfileMobileDto editProfileMobileDto) {
+        User user = userRepository.findById(editProfileMobileDto.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        Optional.ofNullable(editProfileMobileDto.getFirst_name()).ifPresent(user::setFirst_name);
+        Optional.ofNullable(editProfileMobileDto.getLast_name()).ifPresent(user::setLast_name);
+        Optional.ofNullable(editProfileMobileDto.getEmail()).ifPresent(user::setEmail);
+        Optional.ofNullable(editProfileMobileDto.getPhone()).ifPresent(user::setPhone);
+        Optional.ofNullable(editProfileMobileDto.getFunction()).ifPresent(user::setFunction);
+        Optional.ofNullable(editProfileMobileDto.getAddress()).ifPresent(user::setAddress);
+
+        Optional.ofNullable(editProfileMobileDto.getProfile_photo())
+                .ifPresent(photo -> user.setProfile_photo(Base64.getDecoder().decode(photo)));
+
+        Optional.ofNullable(editProfileMobileDto.getCompany_logo())
+                .ifPresent(photo -> user.setCompany_logo(Base64.getDecoder().decode(photo)));
+
+        Optional.ofNullable(editProfileMobileDto.getPassword())
+                .ifPresent(password -> user.setPassword(passwordEncoder.encode(password)));
+
+        Optional.ofNullable(editProfileMobileDto.getContact_person()).ifPresent(user::setContact_person);
+        Optional.ofNullable(editProfileMobileDto.getContact_person_phone()).ifPresent(user::setContact_person_phone);
+        Optional.ofNullable(editProfileMobileDto.getReport_to()).ifPresent(user::setReport_to);
+        Optional.ofNullable(editProfileMobileDto.getCompany_name()).ifPresent(user::setCompany_name);
+        Optional.ofNullable(editProfileMobileDto.getSmoking()).ifPresent(user::setSmoking);
+        Optional.ofNullable(editProfileMobileDto.getAlcoholic()).ifPresent(user::setAlcoholic);
+        Optional.ofNullable(editProfileMobileDto.getMedications()).ifPresent(user::setMedications);
+        Optional.ofNullable(editProfileMobileDto.getDrugs()).ifPresent(user::setDrugs);
+        Optional.ofNullable(editProfileMobileDto.getDiseases()).ifPresent(user::setDiseases);
+        Optional.ofNullable(editProfileMobileDto.getPin()).ifPresent(user::setPin);
+        Optional.ofNullable(editProfileMobileDto.getBlood_type()).ifPresent(user::setBlood_type);
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public PinSettingsDto getPinSettings() {
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        PinSettingsDto pinSettingsDto = new PinSettingsDto();
+        pinSettingsDto.setPin(authUser.getPin());
+        return pinSettingsDto;
+    }
+
+    @Override
+    public User updateUserPin(PinSettingsDto pinSettingsDto) {
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        authUser.setPin(pinSettingsDto.getPin());
+        return userRepository.save(authUser);
+    }
+
+    @Override
+    public UserTermsDto getUserTerms() {
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        UserTermsDto userTermsDto = new UserTermsDto();
+        if(authUser.getTerms_accepted() != null) {
+            userTermsDto.setTerms_accepted(authUser.getTerms_accepted());
+        }
+        else {
+        userTermsDto.setTerms_accepted(false);}
+
+        return userTermsDto;
+    }
+
+    @Override
+    public User updateUserTerms(UserTermsDto userTermsDto) {
+        String username = getCurrentUsername();
+        User authUser = userRepository.findByEmail(username);
+        authUser.setTerms_accepted(userTermsDto.getTerms_accepted());
+        return userRepository.save(authUser);
+    }
 }

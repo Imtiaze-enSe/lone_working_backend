@@ -6,6 +6,7 @@ import com.imense.loneworking.domain.entity.Enum.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.locationtech.jts.geom.Geometry;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,6 +48,7 @@ public class User implements UserDetails {
     private String password;
     private Boolean contact;
     private String remember_token;
+    private String company_name;
     @Lob
     private String fcm_token;
 
@@ -59,9 +61,6 @@ public class User implements UserDetails {
 
     private Geometry position;
 
-    private String zone;
-    private String level;
-    private String room;
     private String address;
     private String contact_person;
     private String contact_person_phone;
@@ -69,6 +68,7 @@ public class User implements UserDetails {
     private String function;
 
     // health info
+    private String drugs;
     private String blood_type;
     private String diseases;
     private String medications;
@@ -83,10 +83,12 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @ToString.Exclude
     private List<Alert> alerts;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @ToString.Exclude
     private List<Notification> notifications;
 
     @Enumerated(EnumType.STRING)

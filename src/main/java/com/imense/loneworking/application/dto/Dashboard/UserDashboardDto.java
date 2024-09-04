@@ -18,7 +18,4 @@ public class UserDashboardDto {
     private String status;
     private Long site_id;
     private String phone;
-    private String zone;
-    private String level;
-    private String room;
 }

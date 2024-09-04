@@ -8,4 +8,5 @@ public interface AuthService {
     User registerUser(RegistrationDto registrationDto);
     String authenticateUserWeb(LoginDto loginDto);
     String authenticateUserMobile(LoginDto loginDto);
+    String authenticateUserMobilePin(String pin);
 }

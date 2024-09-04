@@ -58,7 +58,6 @@ public class UserController {
     }
     @GetMapping("mobile/worker/authenticated")
     public AuthenticatedUserDto getAuthenticatedUserMobile(){
-        System.out.println("Hellooooo");
         return userService.getAuthenticatedUser();
     }
 
@@ -82,4 +81,43 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
         }
     }
+    @GetMapping("mobile/worker/settings")
+    public EditProfileMobileDto getEditProfileUser(){
+        return userService.getUserForMobileSettings();
+    }
+    @PutMapping("mobile/worker/settings")
+    public ResponseEntity<User> settingsMobile(@RequestBody EditProfileMobileDto editProfileMobileDto){
+        User updatedUser = userService.settingsMobile(editProfileMobileDto);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser); // Return 200 OK with the updated user object
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
+        }
+    }
+    @GetMapping("mobile/worker/pinsettings")
+    public PinSettingsDto getPinSettingsUser(){
+        return userService.getPinSettings();
+    }
+
+   @PutMapping("mobile/worker/pinsettings")
+    public ResponseEntity<User> pinSettingsMobile(@RequestBody PinSettingsDto pinSettingsDto){
+        User updatedUser=userService.updateUserPin(pinSettingsDto);
+       if (updatedUser != null) {
+           return ResponseEntity.ok(updatedUser); // Return 200 OK with the updated user object
+       } else {
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
+       }
+   }
+   @GetMapping("mobile/worker/terms")
+    public UserTermsDto getTermsUser(){
+        return userService.getUserTerms();
+   }
+   @PutMapping("mobile/worker/terms")
+    public ResponseEntity<User> termsUser(@RequestBody UserTermsDto userTermsDto){
+        User updatedUser=userService.updateUserTerms(userTermsDto);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+   }
 }

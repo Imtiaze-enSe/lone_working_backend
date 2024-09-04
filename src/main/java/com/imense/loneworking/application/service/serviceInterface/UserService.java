@@ -18,4 +18,10 @@ public interface UserService {
 
     User editProfileUser(EditProfileUserDto editProfileUserDto);
     User changePasswordUser(ChangePasswordDto changePasswordDto);
+    EditProfileMobileDto getUserForMobileSettings();
+    User settingsMobile(EditProfileMobileDto editProfileMobileDto);
+    PinSettingsDto getPinSettings();
+    User updateUserPin(PinSettingsDto pinSettingsDto);
+    UserTermsDto getUserTerms();
+    User updateUserTerms(UserTermsDto userTermsDto);
 }
