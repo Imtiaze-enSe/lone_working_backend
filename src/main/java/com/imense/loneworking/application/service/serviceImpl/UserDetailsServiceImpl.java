@@ -20,11 +20,9 @@ import java.util.stream.Collectors;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil; // Inject JwtUtil
 
-    public UserDetailsServiceImpl(UserRepository userRepository, JwtUtil jwtUtil) {
+    public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -34,7 +32,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserRole userRole = user.getRole();
         List<SimpleGrantedAuthority> authorities = userRole.getAuthorities();
 
-        authorities.forEach(authority -> System.out.println("Authority: " + authority.getAuthority()));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),

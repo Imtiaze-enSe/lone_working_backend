@@ -1,6 +1,5 @@
 package com.imense.loneworking.presentation.controller;
 
-
 import com.imense.loneworking.application.dto.Dashboard.UserDashboardDto;
 import com.imense.loneworking.application.dto.Worker.*;
 import com.imense.loneworking.application.dto.Zone.ZoneCreationDto;
@@ -24,13 +23,19 @@ public class UserController {
     }
 
     @GetMapping("web/dashboard/usersDashboard/site_id:{site_id}")
-    public List<UserDashboardDto> getUsersForAuthenticatedUser(@PathVariable Long site_id) {
-        return userService.getAllUsersForDashboard(site_id);
+    public ResponseEntity<List<UserDashboardDto>> getUsersForAuthenticatedUser(@PathVariable Long site_id) {
+        List<UserDashboardDto> users = userService.getAllUsersForDashboard(site_id);
+        if (users != null && !users.isEmpty()) {
+            return ResponseEntity.ok(users);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // Return 204 No Content if no users are found
+        }
     }
 
     @GetMapping("web/workers")
-    public List<WorkerInfoDto> getAllUsersForTable() {
-        return userService.getAllUsersForTable();
+    public ResponseEntity<List<WorkerInfoDto>> getAllUsersForTable() {
+        List<WorkerInfoDto> workers = userService.getAllUsersForTable();
+        return workers != null && !workers.isEmpty() ? ResponseEntity.ok(workers) : ResponseEntity.noContent().build();
     }
 
     @PostMapping("web/worker")
@@ -38,86 +43,76 @@ public class UserController {
         User newUser = userService.addWorker(workerCreationDto);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
+
     @PutMapping("web/worker/{id}")
     public ResponseEntity<User> updateWorker(@PathVariable Long id, @RequestBody WorkerCreationDto workerCreationDto) {
         User updatedUser = userService.updateWorker(id, workerCreationDto);
-        if (updatedUser != null) {
-            return ResponseEntity.ok(updatedUser); // Return 200 OK with the updated user object
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
-        }
+        return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
     @DeleteMapping("web/worker/{id}")
-    public void deleteWorker(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteWorker(@PathVariable Long id) {
         userService.deleteWorker(id);
+        return ResponseEntity.noContent().build(); // Return 204 No Content when the worker is successfully deleted
     }
 
     @GetMapping("web/worker/authenticated")
-    public AuthenticatedUserDto getAuthenticatedUserWeb(){
-        return userService.getAuthenticatedUser();
+    public ResponseEntity<AuthenticatedUserDto> getAuthenticatedUserWeb() {
+        AuthenticatedUserDto user = userService.getAuthenticatedUser();
+        return ResponseEntity.ok(user);
     }
+
     @GetMapping("mobile/worker/authenticated")
-    public AuthenticatedUserDto getAuthenticatedUserMobile(){
-        return userService.getAuthenticatedUser();
+    public ResponseEntity<AuthenticatedUserDto> getAuthenticatedUserMobile() {
+        AuthenticatedUserDto user = userService.getAuthenticatedUser();
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping("web/worker/authenticated")
-    public ResponseEntity<User> editProfileUser(@RequestBody EditProfileUserDto editProfileUserDto){
+    public ResponseEntity<User> editProfileUser(@RequestBody EditProfileUserDto editProfileUserDto) {
         User updatedUser = userService.editProfileUser(editProfileUserDto);
-        if (updatedUser != null) {
-            return ResponseEntity.ok(updatedUser); // Return 200 OK with the updated user object
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
-        }
+        return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-
 
     @PutMapping("web/worker/authenticated/password")
-    public ResponseEntity<User> changePasswordUser(@RequestBody ChangePasswordDto changePasswordDto){
+    public ResponseEntity<User> changePasswordUser(@RequestBody ChangePasswordDto changePasswordDto) {
         User updatedUser = userService.changePasswordUser(changePasswordDto);
-        if (updatedUser != null) {
-            return ResponseEntity.ok(updatedUser); // Return 200 OK with the updated user object
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
-        }
-    }
-    @GetMapping("mobile/worker/settings")
-    public EditProfileMobileDto getEditProfileUser(){
-        return userService.getUserForMobileSettings();
-    }
-    @PutMapping("mobile/worker/settings")
-    public ResponseEntity<User> settingsMobile(@RequestBody EditProfileMobileDto editProfileMobileDto){
-        User updatedUser = userService.settingsMobile(editProfileMobileDto);
-        if (updatedUser != null) {
-            return ResponseEntity.ok(updatedUser); // Return 200 OK with the updated user object
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
-        }
-    }
-    @GetMapping("mobile/worker/pinsettings")
-    public PinSettingsDto getPinSettingsUser(){
-        return userService.getPinSettings();
+        return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-   @PutMapping("mobile/worker/pinsettings")
-    public ResponseEntity<User> pinSettingsMobile(@RequestBody PinSettingsDto pinSettingsDto){
-        User updatedUser=userService.updateUserPin(pinSettingsDto);
-       if (updatedUser != null) {
-           return ResponseEntity.ok(updatedUser); // Return 200 OK with the updated user object
-       } else {
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if user is not found
-       }
-   }
-   @GetMapping("mobile/worker/terms")
-    public UserTermsDto getTermsUser(){
-        return userService.getUserTerms();
-   }
-   @PutMapping("mobile/worker/terms")
-    public ResponseEntity<User> termsUser(@RequestBody UserTermsDto userTermsDto){
-        User updatedUser=userService.updateUserTerms(userTermsDto);
-        if (updatedUser != null) {
-            return ResponseEntity.ok(updatedUser);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-   }
+    @GetMapping("mobile/worker/settings")
+    public ResponseEntity<EditProfileMobileDto> getEditProfileUser() {
+        EditProfileMobileDto profile = userService.getUserForMobileSettings();
+        return profile != null ? ResponseEntity.ok(profile) : ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("mobile/worker/settings")
+    public ResponseEntity<User> settingsMobile(@RequestBody EditProfileMobileDto editProfileMobileDto) {
+        User updatedUser = userService.settingsMobile(editProfileMobileDto);
+        return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @GetMapping("mobile/worker/pinsettings")
+    public ResponseEntity<PinSettingsDto> getPinSettingsUser() {
+        PinSettingsDto pinSettings = userService.getPinSettings();
+        return pinSettings != null ? ResponseEntity.ok(pinSettings) : ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("mobile/worker/pinsettings")
+    public ResponseEntity<User> pinSettingsMobile(@RequestBody PinSettingsDto pinSettingsDto) {
+        User updatedUser = userService.updateUserPin(pinSettingsDto);
+        return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @GetMapping("mobile/worker/terms")
+    public ResponseEntity<UserTermsDto> getTermsUser() {
+        UserTermsDto terms = userService.getUserTerms();
+        return terms != null ? ResponseEntity.ok(terms) : ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("mobile/worker/terms")
+    public ResponseEntity<User> termsUser(@RequestBody UserTermsDto userTermsDto) {
+        User updatedUser = userService.updateUserTerms(userTermsDto);
+        return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 }

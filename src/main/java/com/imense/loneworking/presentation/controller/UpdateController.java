@@ -2,10 +2,9 @@ package com.imense.loneworking.presentation.controller;
 
 import com.imense.loneworking.application.dto.Update.UpdateInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.UpdateService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,14 +17,25 @@ public class UpdateController {
         this.updateService = updateService;
     }
 
+    // Get updates for web by ID
     @GetMapping("/web/updates/{id}")
-    public List<UpdateInfoDto> getUpdates(@PathVariable Long id){
-        return updateService.getUpdates(id);
+    public ResponseEntity<List<UpdateInfoDto>> getUpdates(@PathVariable Long id) {
+        try {
+            List<UpdateInfoDto> updates = updateService.getUpdates(id);
+            return ResponseEntity.ok(updates);  // 200 OK
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // 500 Internal Server Error
+        }
     }
+
+    // Get updates for mobile by ID
     @GetMapping("/mobile/alert/updates/{id}")
-    public List<UpdateInfoDto> getUpdatesMobile(@PathVariable Long id){
-        return updateService.getUpdates(id);
+    public ResponseEntity<List<UpdateInfoDto>> getUpdatesMobile(@PathVariable Long id) {
+        try {
+            List<UpdateInfoDto> updates = updateService.getUpdates(id);
+            return ResponseEntity.ok(updates);  // 200 OK
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // 500 Internal Server Error
+        }
     }
-
-
 }
