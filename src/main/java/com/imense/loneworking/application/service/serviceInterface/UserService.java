@@ -24,4 +24,6 @@ public interface UserService {
     User updateUserPin(PinSettingsDto pinSettingsDto);
     UserTermsDto getUserTerms();
     User updateUserTerms(UserTermsDto userTermsDto);
+
+    boolean isUserInSite(Long userId, Double longitude, Double latitude);
 }

@@ -17,24 +17,36 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
+    // Get all notifications
     @GetMapping("web/notifications")
-    public List<NotificationInfoDto> getAllNotifications(){
-        return notificationService.getAllNotifications();
+    public ResponseEntity<List<NotificationInfoDto>> getAllNotifications(){
+        try {
+            List<NotificationInfoDto> notifications = notificationService.getAllNotifications();
+            return ResponseEntity.ok(notifications);  // 200 OK
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
+    // Delete a notification
     @DeleteMapping("web/notification/{id}")
-    public void deleteNotification(@PathVariable Long id){
-        notificationService.deleteNotification(id);
+    public ResponseEntity<Void> deleteNotification(@PathVariable Long id){
+        try {
+            notificationService.deleteNotification(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();  // 204 No Content
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-
+    // Notify nearby workers
     @PostMapping("web/notifications/nearby-workers/{id}")
     public ResponseEntity<Void> notifyNearbyWorkers(@PathVariable Long id, @RequestParam Long id_alert) {
         try {
             notificationService.nearbyWorkers(id, id_alert);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).build();  // 200 OK
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

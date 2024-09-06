@@ -16,7 +16,6 @@ public class LocationWebSocketController {
 
     @MessageMapping("/sendLocation")
     public void handleLocationUpdate(LocationUpdateDto locationUpdate) {
-        System.out.println(locationUpdate);
         locationService.processLocationUpdate(locationUpdate);
     }
 }
