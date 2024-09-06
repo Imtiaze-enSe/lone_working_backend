@@ -115,4 +115,17 @@ public class UserController {
         User updatedUser = userService.updateUserTerms(userTermsDto);
         return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @GetMapping("mobile/user/{userId}/inside-site")
+    public ResponseEntity<String> isUserInSite(@PathVariable Long userId,
+                                               @RequestParam Double longitude,
+                                               @RequestParam Double latitude) {
+        boolean isInside = userService.isUserInSite(userId, longitude, latitude);
+
+        if (isInside) {
+            return ResponseEntity.ok("User is inside the site");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User is not inside the site");
+        }
+    }
 }

@@ -6,10 +6,12 @@ import com.imense.loneworking.application.service.serviceInterface.UserService;
 import com.imense.loneworking.domain.entity.Site;
 import com.imense.loneworking.domain.entity.Tenant;
 import com.imense.loneworking.domain.entity.User;
-import com.imense.loneworking.domain.entity.Zone;
 import com.imense.loneworking.domain.repository.SiteRepository;
 import com.imense.loneworking.domain.repository.TenantRepository;
 import com.imense.loneworking.domain.repository.UserRepository;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,12 +29,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final SiteRepository siteRepository;
     private final PasswordEncoder passwordEncoder;
+    private final GeometryFactory geometryFactory;
 
-    public UserServiceImpl(UserRepository userRepository, SiteRepository siteRepository,
-                           TenantRepository tenantRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, SiteRepository siteRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.siteRepository = siteRepository;
         this.passwordEncoder = passwordEncoder;
+        this.geometryFactory = new GeometryFactory();
     }
     private String getCurrentUsername() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -393,5 +396,25 @@ public class UserServiceImpl implements UserService {
         User authUser = userRepository.findByEmail(username);
         authUser.setTerms_accepted(userTermsDto.getTerms_accepted());
         return userRepository.save(authUser);
+    }
+
+    @Override
+    public boolean isUserInSite(Long userId, Double longitude, Double latitude) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+        User user = userOptional.get();
+        Long siteId = user.getSiteId();
+        // Find the site
+        Optional<Site> siteOptional = siteRepository.findById(siteId);
+        if (siteOptional.isEmpty()) {
+            return false;
+        }
+        Site site = siteOptional.get();
+        Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+
+        // Check if the user's location is inside the site's plan
+        return site.getPlan2d() != null && site.getPlan2d().covers(point);
     }
 }
