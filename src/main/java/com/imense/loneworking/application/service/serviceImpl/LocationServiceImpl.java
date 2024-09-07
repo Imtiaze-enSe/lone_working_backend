@@ -39,7 +39,7 @@ public class LocationServiceImpl implements LocationService {
             if (userSite.isPresent()){
                 Point point = geometryFactory.createPoint(new Coordinate(locationUpdate.getLongitude(), locationUpdate.getLatitude()));
                 // Check if the user's location is within the site's plan
-                if (userSite.get().getPlan2d() != null && userSite.get().getPlan2d().contains(point)) {
+                if ((userSite.get().getPlan2d() != null && userSite.get().getPlan2d().contains(point)) || Objects.equals(locationUpdate.getUser_status(), "Disconnected")) {
                     if (!Objects.equals(locationUpdate.getUser_status(), "Disconnected")) {
                         user.get().setPosition(point);
                     }
