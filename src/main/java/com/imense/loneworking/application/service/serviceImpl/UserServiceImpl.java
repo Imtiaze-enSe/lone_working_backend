@@ -196,7 +196,6 @@ public class UserServiceImpl implements UserService {
         user.setDepartment(workerCreationDto.getDepartment());
         user.setFunction(workerCreationDto.getFunction());
 
-        user.setRole(WORKER);
 
         return userRepository.save(user);
     }
