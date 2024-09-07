@@ -51,10 +51,19 @@ public class UserController {
     }
 
     @DeleteMapping("web/worker/{id}")
-    public ResponseEntity<Void> deleteWorker(@PathVariable Long id) {
-        userService.deleteWorker(id);
-        return ResponseEntity.noContent().build(); // Return 204 No Content when the worker is successfully deleted
+    public ResponseEntity<?> deleteWorker(@PathVariable Long id) {
+        try {
+            userService.deleteWorker(id);
+            return ResponseEntity.noContent().build(); // 204 No Content when deletion is successful
+        } catch (RuntimeException ex) {
+            // Log the error if needed
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage()); // Return 404 Not Found if the user is not found or deletion fails
+        } catch (Exception ex) {
+            // Handle any other unexpected exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting the worker.");
+        }
     }
+
 
     @GetMapping("web/worker/authenticated")
     public ResponseEntity<AuthenticatedUserDto> getAuthenticatedUserWeb() {
