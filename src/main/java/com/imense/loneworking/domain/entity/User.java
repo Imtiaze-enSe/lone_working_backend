@@ -36,6 +36,7 @@ public class User implements UserDetails {
     private String phone;
     private String signature;
     @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] profile_photo;
     private String qr_password;
     private Boolean terms_accepted;
@@ -53,6 +54,7 @@ public class User implements UserDetails {
     private String fcm_token;
 
     @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] company_logo;
 
     private LocalDateTime created_at;
