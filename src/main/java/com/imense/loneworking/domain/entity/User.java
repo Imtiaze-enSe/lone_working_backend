@@ -65,6 +65,8 @@ public class User implements UserDetails {
     private String contact_person;
     private String contact_person_phone;
     private String department;
+
+    @Column(name = "`function`")
     private String function;
 
     // health info
