@@ -26,7 +26,7 @@ public class LoneworkingApplication {
 					.email("admin@example.com")
 					.password("test")
 					.role(ADMIN)
-					.site_id(0)
+					.site_id(1)
 					.build();
 			System.out.println("Admin token : " + authService.registerUser(admin).getFcm_token());
 //			var worker = RegistrationDto.builder()
