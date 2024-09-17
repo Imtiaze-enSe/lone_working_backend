@@ -2,6 +2,7 @@ package com.imense.loneworking.presentation.controller;
 
 import com.imense.loneworking.application.dto.Authentification.LoginDto;
 import com.imense.loneworking.application.dto.Authentification.RegistrationDto;
+import com.imense.loneworking.application.service.serviceInterface.SafetyTrackerAuthService;
 import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.application.service.serviceInterface.AuthService;
 import com.imense.loneworking.presentation.response.InvalidPinException;
@@ -16,9 +17,11 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
+    private final SafetyTrackerAuthService safetyTrackerAuthService;
 
-    public AuthController(AuthService authService){
+    public AuthController(AuthService authService,SafetyTrackerAuthService safetyTrackerAuthService){
         this.authService = authService;
+        this.safetyTrackerAuthService= safetyTrackerAuthService;
     }
 
     // Registration API
@@ -61,7 +64,8 @@ public class AuthController {
     @PostMapping("auth/loginweb")
     public ResponseEntity<String> loginWeb(@RequestBody LoginDto loginDto) {
         try {
-            String response = authService.authenticateUserWeb(loginDto);
+            //String response = authService.authenticateUserWeb(loginDto);
+            String response = safetyTrackerAuthService.safetyTrackerAuthenticateUserWeb(loginDto);
             return new ResponseEntity<>(response, HttpStatus.OK);  // Return 200 OK on successful login
         } catch (Exception ex) {
             return new ResponseEntity<>("Authentication failed", HttpStatus.UNAUTHORIZED);  // Handle authentication failure with 401 Unauthorized
