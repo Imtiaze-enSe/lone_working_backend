@@ -15,7 +15,7 @@ public class UserDashboardDto {
     private String profile_photo;
     private String company_name;
     private Geometry position;
-    private String status;
+    private String status; // remove this
     private Long site_id;
     private String phone;
 }

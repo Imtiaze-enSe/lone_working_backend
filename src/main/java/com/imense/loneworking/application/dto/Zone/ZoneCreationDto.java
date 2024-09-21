@@ -11,7 +11,7 @@ import org.locationtech.jts.geom.Geometry;
 @Setter
 public class ZoneCreationDto {
     private String zoneName;
-    private String siteName;
+    private String siteName; // site_id
     private Geometry planZone;
 
 }

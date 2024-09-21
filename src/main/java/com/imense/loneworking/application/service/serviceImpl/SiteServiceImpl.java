@@ -59,7 +59,7 @@ public class SiteServiceImpl implements SiteService {
                     dto.setCompanyName(thisSite.getTenant().getName());
                     dto.setLocation(thisSite.getLocation());
                     dto.setNbrZones(NbrZones);
-                    dto.setSiteCreatedAt(thisSite.getCreated_at());
+//                    dto.setSiteCreatedAt(thisSite.getCreated_at());
                     return dto;
                 })
                 .collect(Collectors.toList());

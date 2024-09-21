@@ -20,8 +20,10 @@ public class EditProfileMobileDto {
     private String contact_person;
     private String contact_person_phone;
     private String report_to;
-    private String company_logo;
+    private String company_logo; // remplace by company id
     private String company_name;
+
+    // health
     private String blood_type;
     private String diseases;
     private String medications;

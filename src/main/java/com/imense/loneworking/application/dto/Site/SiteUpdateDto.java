@@ -1,14 +1,9 @@
 package com.imense.loneworking.application.dto.Site;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.locationtech.jts.geom.Geometry;
 
-@Data
-@Getter
-@Setter
-public class SiteCreationDto {
+public class SiteUpdateDto {
+    private Long id;
     private String SiteName;
     private String companyName; // Int company id
     private String location; // adress

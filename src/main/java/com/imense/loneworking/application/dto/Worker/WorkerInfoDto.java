@@ -26,13 +26,13 @@ public class WorkerInfoDto {
 
     private String function;
     private String address;
-    private String company_logo;
+    private String company_logo;  // + company name + site id
     private String site_name;
     private String department;
     private String contact_person_phone;
     private String contact_person;
     private String report_to;
-    // health info
+    // health info ------- // remove
     private String blood_type;
     private String diseases;
     private String medications;

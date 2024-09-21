@@ -5,28 +5,48 @@ import com.imense.loneworking.application.dto.Qrcode.SiteQrCodeDto;
 import com.imense.loneworking.application.dto.Site.SiteCreationDto;
 import com.imense.loneworking.application.dto.Site.SiteInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.SiteService;
+import com.imense.loneworking.application.service.serviceInterface.SiteServiceSynchro;
 import com.imense.loneworking.domain.entity.Site;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
 public class SiteController {
     private final SiteService siteService;
+    private final SiteServiceSynchro siteServiceSynchro;
 
-    public SiteController(SiteService siteService) {
+    public SiteController(SiteService siteService, SiteServiceSynchro siteServiceSynchro) {
         this.siteService = siteService;
+        this.siteServiceSynchro = siteServiceSynchro;
     }
 
-    // Get list of site info
-    @GetMapping("web/sites")
-    public ResponseEntity<List<SiteInfoDto>> getSiteInfo() {
+    @GetMapping("/web/tenant/{tenantId}/sites")
+    public ResponseEntity<List<SiteInfoDto>> getSiteInfo(
+            @PathVariable Long tenantId,  // tenantId as path parameter
+            @RequestBody Map<String, String> requestBody) {  // token in body
+        String token = requestBody.get("token");
+        // Fetch the site information using the tenantId and token
+        List<SiteInfoDto> siteInfoList = siteServiceSynchro.getSiteInfo(tenantId, token);
+
+        // Return the site information wrapped in a ResponseEntity
+        return ResponseEntity.ok(siteInfoList);  // Return HTTP 200 with the list of sites
+    }
+
+//     Get site dashboard info
+    @GetMapping("web/dashboard/{tenantId}/sites")
+    public ResponseEntity<List<SiteDashboardDto>> getSiteInfoDashboard(
+            @PathVariable Long tenantId,  // tenantId as path parameter
+            @RequestBody Map<String, String> requestBody
+    ) {
         try {
-            List<SiteInfoDto> siteInfoList = siteService.getSiteInfo();
-            return ResponseEntity.ok(siteInfoList);  // 200 OK
+            String token = requestBody.get("token");
+            List<SiteDashboardDto> dashboardSites = siteServiceSynchro.getSiteInfoDashboard(tenantId, token);
+            return ResponseEntity.ok(dashboardSites);  // 200 OK
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -65,22 +85,15 @@ public class SiteController {
         }
     }
 
-    // Get site dashboard info
-    @GetMapping("web/dashboard/sites")
-    public ResponseEntity<List<SiteDashboardDto>> getSiteInfoDashboard() {
-        try {
-            List<SiteDashboardDto> dashboardSites = siteService.getSiteInfoDashboard();
-            return ResponseEntity.ok(dashboardSites);  // 200 OK
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
     // Get site info for QR Code
-    @GetMapping("web/qrCode/sites")
-    public ResponseEntity<List<SiteQrCodeDto>> getSiteInfoQrCode() {
+    @GetMapping("web/qrCode/tenant/{tenantId}/sites")
+    public ResponseEntity<List<SiteQrCodeDto>> getSiteInfoQrCode(
+            @PathVariable Long tenantId,  // tenantId as path parameter
+            @RequestBody Map<String, String> requestBody
+    ) {
         try {
-            List<SiteQrCodeDto> qrCodeSites = siteService.getSiteInfoQrCode();
+            String token = requestBody.get("token");
+            List<SiteQrCodeDto> qrCodeSites = siteServiceSynchro.getSiteInfoQrCode(tenantId,token);
             return ResponseEntity.ok(qrCodeSites);  // 200 OK
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

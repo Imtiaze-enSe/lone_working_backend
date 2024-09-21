@@ -62,7 +62,7 @@ public class SecurityConfig {
                         .requestMatchers(POST, "/api/mobile/**").hasAnyAuthority(ADMIN_CREATE.name(), WORKER_CREATE.name())
                         .requestMatchers(PUT, "/api/mobile/**").hasAnyAuthority(ADMIN_UPDATE.name(), WORKER_UPDATE.name())
                         .requestMatchers(DELETE, "/api/mobile/**").hasAnyAuthority(ADMIN_DELETE.name(), WORKER_DELETE.name())
-                        .requestMatchers("/api/web/**").hasRole(ADMIN.name())
+                        .requestMatchers("/api/web/**").permitAll()
                         .requestMatchers(GET, "/api/web/**").hasAuthority(ADMIN_READ.name())
                         .requestMatchers(POST, "/api/web/**").hasAuthority(ADMIN_CREATE.name())
                         .requestMatchers(PUT, "/api/web/**").hasAuthority(ADMIN_UPDATE.name())

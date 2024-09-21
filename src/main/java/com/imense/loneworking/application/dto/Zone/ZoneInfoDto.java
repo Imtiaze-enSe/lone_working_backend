@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 public class ZoneInfoDto {
     private Long zone_id;
-    private String siteName;
+    private String siteName; // + site_id
     private String zoneName;
     private String companyName;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
