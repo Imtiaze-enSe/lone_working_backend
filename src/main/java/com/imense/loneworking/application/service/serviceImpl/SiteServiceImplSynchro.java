@@ -12,7 +12,10 @@ import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.domain.repository.SiteRepository;
 import com.imense.loneworking.domain.repository.SiteSynchroRepository;
 import org.locationtech.jts.geom.Geometry;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -144,17 +147,19 @@ public class SiteServiceImplSynchro implements SiteServiceSynchro {
         // Extract the site data from the request body
         System.out.println(siteCreationDto);
         // Create a map with only name and address
-        Map<String, Object> payload = Map.of(
-                "name", siteCreationDto.getSiteName(),
-                "address", siteCreationDto.getLocation()
-        );
-        System.out.println(payload);
+        // Build form-data payload using MultipartBodyBuilder
+        MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+        bodyBuilder.part("site[name]", siteCreationDto.getSiteName());
+        bodyBuilder.part("site[address]", siteCreationDto.getLocation());
 
         return webClient
                 .post()
                 .uri(url)
-                .headers(headers -> headers.setBearerAuth(token))
-                .bodyValue(payload)
+                .headers(headers -> {
+                    headers.setBearerAuth(token);
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                })
+                .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
                 .retrieve()
                 .bodyToMono(Map.class)  // Retrieve the response as a map to extract fields
                 .publishOn(Schedulers.boundedElastic())  // Retrieve the response as a map to extract fields
