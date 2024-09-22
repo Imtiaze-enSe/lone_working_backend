@@ -4,6 +4,7 @@ import com.imense.loneworking.application.dto.Dashboard.UserDashboardDto;
 import com.imense.loneworking.application.dto.Worker.*;
 import com.imense.loneworking.application.dto.Zone.ZoneCreationDto;
 import com.imense.loneworking.application.dto.Zone.ZoneUpdateDto;
+import com.imense.loneworking.application.service.serviceInterface.SafetyTrackerUserService;
 import com.imense.loneworking.application.service.serviceInterface.UserService;
 import com.imense.loneworking.domain.entity.User;
 import com.imense.loneworking.domain.entity.Zone;
@@ -14,17 +15,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/safety-tracker")
 public class UserController {
     private final UserService userService;
+    private final SafetyTrackerUserService safetyTrackerUserService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService,SafetyTrackerUserService safetyTrackerUserService) {
         this.userService = userService;
+        this.safetyTrackerUserService=safetyTrackerUserService;
     }
 
     @GetMapping("web/dashboard/usersDashboard/site_id:{site_id}")
     public ResponseEntity<List<UserDashboardDto>> getUsersForAuthenticatedUser(@PathVariable Long site_id) {
-        List<UserDashboardDto> users = userService.getAllUsersForDashboard(site_id);
+        //List<UserDashboardDto> users = userService.getAllUsersForDashboard(site_id);
+        List<UserDashboardDto> users = safetyTrackerUserService.getAllUsersForDashboard(site_id);
         if (users != null && !users.isEmpty()) {
             return ResponseEntity.ok(users);
         } else {
@@ -34,7 +38,8 @@ public class UserController {
 
     @GetMapping("web/workers")
     public ResponseEntity<List<WorkerInfoDto>> getAllUsersForTable() {
-        List<WorkerInfoDto> workers = userService.getAllUsersForTable();
+        //List<WorkerInfoDto> workers = userService.getAllUsersForTable();
+        List<WorkerInfoDto> workers = safetyTrackerUserService.getAllUsersForTable();
         return workers != null && !workers.isEmpty() ? ResponseEntity.ok(workers) : ResponseEntity.noContent().build();
     }
 
@@ -67,7 +72,8 @@ public class UserController {
 
     @GetMapping("web/worker/authenticated")
     public ResponseEntity<AuthenticatedUserDto> getAuthenticatedUserWeb() {
-        AuthenticatedUserDto user = userService.getAuthenticatedUser();
+        //AuthenticatedUserDto user = userService.getAuthenticatedUser();
+        AuthenticatedUserDto user = safetyTrackerUserService.getAuthenticatedUser();
         return ResponseEntity.ok(user);
     }
 

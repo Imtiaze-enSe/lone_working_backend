@@ -17,5 +17,15 @@ public class UserSynchro {
     @Column(name = "ref_id")  // Map the database column ref_id to this field
     private Long refId;
 
+    private String status;
+
+    // health info
+    private String drugs;
+    private String blood_type;
+    private String diseases;
+    private String medications;
+    private Boolean alcoholic;
+    private Boolean smoking;
+
     private Geometry position;
 }
