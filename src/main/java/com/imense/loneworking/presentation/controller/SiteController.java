@@ -7,9 +7,11 @@ import com.imense.loneworking.application.dto.Site.SiteInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.SiteService;
 import com.imense.loneworking.application.service.serviceInterface.SiteServiceSynchro;
 import com.imense.loneworking.domain.entity.Site;
+import com.imense.loneworking.domain.entity.SiteSynchro;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
@@ -53,15 +55,22 @@ public class SiteController {
     }
 
     // Add a new site
-    @PostMapping("web/site")
-    public ResponseEntity<Site> addSite(@RequestBody SiteCreationDto siteCreationDto) {
+    @PostMapping("/web/site")
+    public ResponseEntity<SiteSynchro> addSite(
+            @RequestBody SiteCreationDto siteCreationDto
+    ) {
         try {
-            Site site = siteService.addSite(siteCreationDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(site);  // 201 Created
+            Mono<SiteSynchro> siteMono = siteServiceSynchro.addSite(siteCreationDto);
+
+            // Wait for the Mono to complete and get the result
+            SiteSynchro siteSynchro = siteMono.block();  // Blocking for simplicity, but you can handle this reactively if needed.
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(siteSynchro);  // 201 Created
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     // Update a site by ID
     @PutMapping("web/site/{id}")

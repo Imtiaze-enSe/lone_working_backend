@@ -15,6 +15,7 @@ import org.locationtech.jts.geom.Geometry;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -122,23 +123,60 @@ public class SiteServiceImplSynchro implements SiteServiceSynchro {
         return siteQrCodeDto;
     }
 
+//    @Override
+//    public Site addSite(SiteCreationDto siteCreationDto) {
+//
+//        Site site = new Site();
+//        site.setName(siteCreationDto.getSiteName());
+//        site.setLocation(siteCreationDto.getLocation());
+//        site.setPlan2d(siteCreationDto.getPlan2d());
+//        site.setPlan3d(siteCreationDto.getPlan3d());
+//        site.setCreated_at(LocalDateTime.now());
+//        site.setUpdated_at(LocalDateTime.now());
+//
+//        return siteRepository.save(site);
+//    }
+
     @Override
-    public Site addSite(SiteCreationDto siteCreationDto) {
-        Tenant tenant = tenantRepository.findByName(siteCreationDto.getCompanyName());
-        if (tenant == null) {
-            throw new RuntimeException("Tenant not found");
-        }
+    public Mono<SiteSynchro> addSite(SiteCreationDto siteCreationDto) {
+        String url = "/client/sites";
+        String token = "1392|8PoemSJt1EOkUapqYVH2JHHVJwkSOkwSeLaWS44A71ee5a6c";
+        // Extract the site data from the request body
+        System.out.println(siteCreationDto);
+        // Create a map with only name and address
+        Map<String, Object> payload = Map.of(
+                "name", siteCreationDto.getSiteName(),
+                "address", siteCreationDto.getLocation()
+        );
+        System.out.println(payload);
 
-        Site site = new Site();
-        site.setName(siteCreationDto.getSiteName());
-        site.setTenant(tenant);
-        site.setLocation(siteCreationDto.getLocation());
-        site.setPlan2d(siteCreationDto.getPlan2d());
-        site.setPlan3d(siteCreationDto.getPlan3d());
-        site.setCreated_at(LocalDateTime.now());
-        site.setUpdated_at(LocalDateTime.now());
+        return webClient
+                .post()
+                .uri(url)
+                .headers(headers -> headers.setBearerAuth(token))
+                .bodyValue(payload)
+                .retrieve()
+                .bodyToMono(Map.class)  // Retrieve the response as a map to extract fields
+                .publishOn(Schedulers.boundedElastic())  // Retrieve the response as a map to extract fields
+                .handle((response, sink) -> {
+                    // Check if the API call was successful
+                    System.out.println(response);
+                    if (Boolean.TRUE.equals(response.get("success"))) {
+                        Map<String, Object> siteResponseData = (Map<String, Object>) response.get("site");
+                        Long id = Long.valueOf(siteResponseData.get("id").toString());
 
-        return siteRepository.save(site);
+                        // Create SiteSynchro with the returned id
+                        SiteSynchro siteSynchro = new SiteSynchro();
+                        siteSynchro.setRefId(id);
+                        siteSynchro.setPlan2d(siteCreationDto.getPlan2d());
+                        // Save the SiteSynchro entity
+                        siteSynchroRepository.save(siteSynchro);
+
+                    } else {
+                        sink.error(new RuntimeException("Failed to add site: " + response.get("message")));
+                    }
+                });
     }
+
 
 }
