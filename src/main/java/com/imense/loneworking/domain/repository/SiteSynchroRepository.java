@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface SiteSynchroRepository extends JpaRepository<SiteSynchro, Long> {
     Optional<SiteSynchro> findByRefId(Long ref_id);
+    void deleteByRefId(Long refId);
+
 }

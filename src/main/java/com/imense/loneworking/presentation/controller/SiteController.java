@@ -33,7 +33,7 @@ public class SiteController {
             @RequestBody Map<String, String> requestBody) {  // token in body
         String token = requestBody.get("token");
         // Fetch the site information using the tenantId and token
-        List<SiteInfoDto> siteInfoList = siteServiceSynchro.getSiteInfo(tenantId, token);
+        List<SiteInfoDto> siteInfoList = siteServiceSynchro.getSiteInfo(tenantId);
 
         // Return the site information wrapped in a ResponseEntity
         return ResponseEntity.ok(siteInfoList);  // Return HTTP 200 with the list of sites
@@ -47,7 +47,7 @@ public class SiteController {
     ) {
         try {
             String token = requestBody.get("token");
-            List<SiteDashboardDto> dashboardSites = siteServiceSynchro.getSiteInfoDashboard(tenantId, token);
+            List<SiteDashboardDto> dashboardSites = siteServiceSynchro.getSiteInfoDashboard(tenantId);
             return ResponseEntity.ok(dashboardSites);  // 200 OK
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -74,9 +74,9 @@ public class SiteController {
 
     // Update a site by ID
     @PutMapping("web/site/{id}")
-    public ResponseEntity<Site> updateSite(@PathVariable Long id, @RequestBody SiteCreationDto siteCreationDto) {
+    public ResponseEntity<Mono<SiteSynchro>> updateSite(@PathVariable Long id, @RequestBody SiteCreationDto siteCreationDto) {
         try {
-            Site site = siteService.updateSite(id, siteCreationDto);
+            Mono<SiteSynchro> site = siteServiceSynchro.editSite(id, siteCreationDto);
             return ResponseEntity.ok(site);  // 200 OK
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -87,7 +87,8 @@ public class SiteController {
     @DeleteMapping("web/site/{id}")
     public ResponseEntity<Void> deleteSite(@PathVariable Long id) {
         try {
-            siteService.deleteSite(id);
+            siteServiceSynchro.deleteSite(id).block();
+            siteServiceSynchro.deletSiteFromDatabase(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();  // 204 No Content
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -102,7 +103,7 @@ public class SiteController {
     ) {
         try {
             String token = requestBody.get("token");
-            List<SiteQrCodeDto> qrCodeSites = siteServiceSynchro.getSiteInfoQrCode(tenantId,token);
+            List<SiteQrCodeDto> qrCodeSites = siteServiceSynchro.getSiteInfoQrCode(tenantId);
             return ResponseEntity.ok(qrCodeSites);  // 200 OK
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

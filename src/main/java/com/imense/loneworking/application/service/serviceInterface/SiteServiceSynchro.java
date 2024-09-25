@@ -12,8 +12,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface SiteServiceSynchro {
-    List<SiteInfoDto> getSiteInfo(Long tenantId, String token);
-    List<SiteDashboardDto> getSiteInfoDashboard(Long tenantId, String token);
-    List<SiteQrCodeDto> getSiteInfoQrCode(Long tenantId, String token);
+    List<SiteInfoDto> getSiteInfo(Long tenantId);
+    List<SiteDashboardDto> getSiteInfoDashboard(Long tenantId);
+    List<SiteQrCodeDto> getSiteInfoQrCode(Long tenantId);
     Mono<SiteSynchro> addSite(SiteCreationDto siteCreationDto);
+    Mono<Void> deleteSite(Long siteId);
+    void deletSiteFromDatabase(Long siteId);
+    Mono<SiteSynchro> editSite(Long siteId, SiteCreationDto siteCreationDto);
 }
+

@@ -41,7 +41,8 @@ public class SiteServiceImplSynchro implements SiteServiceSynchro {
 
     // Fetch site info and map to SiteInfoDto using tenant_id and token
     @Override
-    public List<SiteInfoDto> getSiteInfo(Long tenantId, String token) {
+    public List<SiteInfoDto> getSiteInfo(Long tenantId) {
+        String token = "1392|8PoemSJt1EOkUapqYVH2JHHVJwkSOkwSeLaWS44A71ee5a6c";
         // Fetch the data from the Safety Tracker API
         List<Map<String, Object>> siteDataList = fetchSiteData(tenantId, token).block();
 
@@ -81,7 +82,8 @@ public class SiteServiceImplSynchro implements SiteServiceSynchro {
 
 
     @Override
-    public List<SiteDashboardDto> getSiteInfoDashboard(Long tenantId, String token){
+    public List<SiteDashboardDto> getSiteInfoDashboard(Long tenantId){
+        String token = "1392|8PoemSJt1EOkUapqYVH2JHHVJwkSOkwSeLaWS44A71ee5a6c";
         // Fetch the data from the Safety Tracker API
         List<Map<String, Object>> siteDataList = fetchSiteData(tenantId, token).block();
 
@@ -106,7 +108,8 @@ public class SiteServiceImplSynchro implements SiteServiceSynchro {
     }
 
     @Override
-    public List<SiteQrCodeDto> getSiteInfoQrCode(Long tenantId, String token) {
+    public List<SiteQrCodeDto> getSiteInfoQrCode(Long tenantId) {
+        String token = "1392|8PoemSJt1EOkUapqYVH2JHHVJwkSOkwSeLaWS44A71ee5a6c";
         // Fetch the data from the Safety Tracker API
         List<Map<String, Object>> siteDataList = fetchSiteData(tenantId, token).block();
 
@@ -126,27 +129,10 @@ public class SiteServiceImplSynchro implements SiteServiceSynchro {
         return siteQrCodeDto;
     }
 
-//    @Override
-//    public Site addSite(SiteCreationDto siteCreationDto) {
-//
-//        Site site = new Site();
-//        site.setName(siteCreationDto.getSiteName());
-//        site.setLocation(siteCreationDto.getLocation());
-//        site.setPlan2d(siteCreationDto.getPlan2d());
-//        site.setPlan3d(siteCreationDto.getPlan3d());
-//        site.setCreated_at(LocalDateTime.now());
-//        site.setUpdated_at(LocalDateTime.now());
-//
-//        return siteRepository.save(site);
-//    }
-
     @Override
     public Mono<SiteSynchro> addSite(SiteCreationDto siteCreationDto) {
         String url = "/client/sites";
         String token = "1392|8PoemSJt1EOkUapqYVH2JHHVJwkSOkwSeLaWS44A71ee5a6c";
-        // Extract the site data from the request body
-        System.out.println(siteCreationDto);
-        // Create a map with only name and address
         // Build form-data payload using MultipartBodyBuilder
         MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
         bodyBuilder.part("site[name]", siteCreationDto.getSiteName());
@@ -165,7 +151,6 @@ public class SiteServiceImplSynchro implements SiteServiceSynchro {
                 .publishOn(Schedulers.boundedElastic())  // Retrieve the response as a map to extract fields
                 .handle((response, sink) -> {
                     // Check if the API call was successful
-                    System.out.println(response);
                     if (Boolean.TRUE.equals(response.get("success"))) {
                         Map<String, Object> siteResponseData = (Map<String, Object>) response.get("site");
                         Long id = Long.valueOf(siteResponseData.get("id").toString());
@@ -182,6 +167,72 @@ public class SiteServiceImplSynchro implements SiteServiceSynchro {
                     }
                 });
     }
+
+    @Override
+    public Mono<Void> deleteSite(Long siteId) {
+        String url = "/client/sites/" + siteId;
+        String token = "1445|O67XSkWJ9PM9t2bSsfeTihramzyg0KcmuO0Qd7SN71edec95";
+
+        return webClient
+                .delete()
+                .uri(url)
+                .headers(headers -> headers.setBearerAuth(token))  // Add Bearer token
+                .retrieve()
+                .bodyToMono(Void.class);  // Expect no body in the response
+    }
+
+
+    @Override
+    public void deletSiteFromDatabase(Long siteId){
+        Optional<SiteSynchro> siteSynchro = siteSynchroRepository.findByRefId(siteId);
+        System.out.println(siteSynchro);
+        siteSynchro.ifPresent(siteSynchroRepository::delete);
+    }
+
+    @Override
+    public Mono<SiteSynchro> editSite(Long siteId, SiteCreationDto siteCreationDto) {
+        String url = "/client/sites/update?_method=put";
+        String token = "1392|8PoemSJt1EOkUapqYVH2JHHVJwkSOkwSeLaWS44A71ee5a6c";
+        // Build form-data payload using MultipartBodyBuilder
+        MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+        bodyBuilder.part("site[id]", siteId);
+        bodyBuilder.part("site[name]", siteCreationDto.getSiteName());
+        bodyBuilder.part("site[address]", siteCreationDto.getLocation());
+
+        // Update the site with WebClient
+        return webClient
+                .post()  // Using POST since _method=put simulates a PUT request
+                .uri(url)
+                .headers(headers -> {
+                    headers.setBearerAuth(token);
+                    headers.setContentType(MediaType.MULTIPART_FORM_DATA);  // Multipart form-data
+                })
+                .body(BodyInserters.fromMultipartData(bodyBuilder.build()))  // Send form-data
+                .retrieve()
+                .bodyToMono(Map.class)  // Handle the response as a map
+                .publishOn(Schedulers.boundedElastic())  // Ensure non-blocking call
+                .handle((response, sink) -> {
+                    // Check if the API call was successful
+                    if (Boolean.TRUE.equals(response.get("success"))) {
+                        // Update SiteSynchro with the new values
+                        SiteSynchro siteSynchro = siteSynchroRepository.findByRefId(siteId)
+                                .orElse(new SiteSynchro());
+
+                        // Check if plan2d is not null, then update it
+                        if (siteCreationDto.getPlan2d() != null) {
+                            siteSynchro.setPlan2d(siteCreationDto.getPlan2d());
+                        }
+
+                        // Save the updated SiteSynchro entity
+                        siteSynchroRepository.save(siteSynchro);
+
+                    } else {
+                        sink.error(new RuntimeException("Failed to update site: " + response.get("message")));
+                    }
+                });
+    }
+
+
 
 
 }
