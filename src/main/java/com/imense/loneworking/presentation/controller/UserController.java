@@ -2,11 +2,9 @@ package com.imense.loneworking.presentation.controller;
 
 import com.imense.loneworking.application.dto.Dashboard.UserDashboardDto;
 import com.imense.loneworking.application.dto.Worker.*;
-import com.imense.loneworking.application.dto.Zone.ZoneCreationDto;
-import com.imense.loneworking.application.dto.Zone.ZoneUpdateDto;
 import com.imense.loneworking.application.service.serviceInterface.UserService;
+import com.imense.loneworking.application.service.serviceInterface.UserServiceSynchro;
 import com.imense.loneworking.domain.entity.User;
-import com.imense.loneworking.domain.entity.Zone;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +15,16 @@ import java.util.List;
 @RequestMapping("/api/")
 public class UserController {
     private final UserService userService;
+    private final UserServiceSynchro userServiceSynchro;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserServiceSynchro userServiceSynchro) {
         this.userService = userService;
+        this.userServiceSynchro = userServiceSynchro;
     }
 
-    @GetMapping("web/dashboard/usersDashboard/site_id:{site_id}")
-    public ResponseEntity<List<UserDashboardDto>> getUsersForAuthenticatedUser(@PathVariable Long site_id) {
-        List<UserDashboardDto> users = userService.getAllUsersForDashboard(site_id);
+    @GetMapping("web/dashboard/usersDashboard/tenant:{tenant_id}")
+    public ResponseEntity<List<UserDashboardDto>> getUsersForAuthenticatedUser(@PathVariable Long tenant_id) {
+        List<UserDashboardDto> users = userServiceSynchro.getAllUsersForDashboard(tenant_id);
         if (users != null && !users.isEmpty()) {
             return ResponseEntity.ok(users);
         } else {
@@ -32,9 +32,9 @@ public class UserController {
         }
     }
 
-    @GetMapping("web/workers")
-    public ResponseEntity<List<WorkerInfoDto>> getAllUsersForTable() {
-        List<WorkerInfoDto> workers = userService.getAllUsersForTable();
+    @GetMapping("web/workers/tenant:{tenand_id}")
+    public ResponseEntity<List<WorkerInfoDto>> getAllUsersForTable(@PathVariable Long tenand_id) {
+        List<WorkerInfoDto> workers = userServiceSynchro.getAllUsersForTable(tenand_id);
         return workers != null && !workers.isEmpty() ? ResponseEntity.ok(workers) : ResponseEntity.noContent().build();
     }
 
@@ -70,6 +70,7 @@ public class UserController {
         AuthenticatedUserDto user = userService.getAuthenticatedUser();
         return ResponseEntity.ok(user);
     }
+
 
     @GetMapping("mobile/worker/authenticated")
     public ResponseEntity<AuthenticatedUserDto> getAuthenticatedUserMobile() {

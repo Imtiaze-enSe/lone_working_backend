@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
                 workerDto.setCompany_logo(null);
             }
 
-            workerDto.setCreated_at(user.getCreated_at());
+//            workerDto.setCreated_at(user.getCreated_at());
 
             workerDto.setFunction(user.getFunction());
             // Check if site exists before accessing the name
@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
             workerDto.setAddress(user.getAddress());
             workerDto.setContact_person_phone(user.getContact_person_phone());
             workerDto.setContact_person(user.getContact_person());
-            workerDto.setReport_to(user.getReport_to());
+//            workerDto.setReport_to(user.getReport_to());
             workerDto.setDepartment(user.getDepartment());
 
             workerDto.setAlcoholic(user.getAlcoholic());

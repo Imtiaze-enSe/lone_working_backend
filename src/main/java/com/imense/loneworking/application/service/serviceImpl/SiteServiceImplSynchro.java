@@ -185,7 +185,6 @@ public class SiteServiceImplSynchro implements SiteServiceSynchro {
     @Override
     public void deletSiteFromDatabase(Long siteId){
         Optional<SiteSynchro> siteSynchro = siteSynchroRepository.findByRefId(siteId);
-        System.out.println(siteSynchro);
         siteSynchro.ifPresent(siteSynchroRepository::delete);
     }
 
