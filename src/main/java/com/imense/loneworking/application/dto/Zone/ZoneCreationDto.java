@@ -15,6 +15,7 @@ import java.util.List;
 public class ZoneCreationDto {
     //old ones
     private String zoneName;
+
     private String siteName;
     // both
     private Geometry planZone;

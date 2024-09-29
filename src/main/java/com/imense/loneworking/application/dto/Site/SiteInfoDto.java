@@ -15,10 +15,8 @@ import java.time.LocalDateTime;
 public class SiteInfoDto {
     private Long site_id;
     private String SiteName;
-    private String companyName;
-    private String location;
+    private String companyName; // tenant name
+    private String location; // adress
     private Integer nbrZones;
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
-    private LocalDateTime siteCreatedAt;
+    private String siteCreatedAt;
 }

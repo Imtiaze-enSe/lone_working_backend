@@ -9,9 +9,10 @@ import org.locationtech.jts.geom.Geometry;
 @Getter
 @Setter
 public class ZoneUpdateDto {
-    private String zoneNumber;
+    private Long id;
+    private String zoneNumber; //  remove
     private String zoneName;
-    private Boolean zoneStatus;
+    private Boolean zoneStatus; // remove
     private Geometry planZone;
-    private String siteName;
+    private String siteName; // site_id
 }

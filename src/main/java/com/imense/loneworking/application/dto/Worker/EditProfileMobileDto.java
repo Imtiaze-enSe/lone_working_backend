@@ -14,14 +14,21 @@ public class EditProfileMobileDto {
     private String last_name;
     private String email;
     private String phone;
-    private String function;
+
+    private Long function_id;
     private String address;
-    private String password;
+
     private String contact_person;
     private String contact_person_phone;
-    private String report_to;
-    private String company_logo;
+
+    private String report_to_first_name;
+    private String report_to_last_name;
     private String company_name;
+    private Long company_id;
+
+    private String password;
+
+    // health
     private String blood_type;
     private String diseases;
     private String medications;

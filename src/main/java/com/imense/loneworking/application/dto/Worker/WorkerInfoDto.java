@@ -20,9 +20,7 @@ public class WorkerInfoDto {
     private String email;
     private String phone;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
-    private LocalDateTime created_at;
+    private String created_at;
 
     private String function;
     private String address;
@@ -31,8 +29,9 @@ public class WorkerInfoDto {
     private String department;
     private String contact_person_phone;
     private String contact_person;
-    private String report_to;
-    // health info
+    private String report_to_first_name;
+    private String report_to_last_name;
+    // health info -------
     private String blood_type;
     private String diseases;
     private String medications;

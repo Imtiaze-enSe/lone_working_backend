@@ -10,11 +10,9 @@ import java.util.List;
 
 public interface SiteService {
     List<SiteInfoDto> getSiteInfo();
+    List<SiteDashboardDto> getSiteInfoDashboard();
+    List<SiteQrCodeDto> getSiteInfoQrCode();
     Site addSite(SiteCreationDto siteDto);
     Site updateSite(Long siteId, SiteCreationDto siteCreationDto);
     void deleteSite(Long siteId);
-
-    List<SiteDashboardDto> getSiteInfoDashboard();
-
-    List<SiteQrCodeDto> getSiteInfoQrCode();
 }

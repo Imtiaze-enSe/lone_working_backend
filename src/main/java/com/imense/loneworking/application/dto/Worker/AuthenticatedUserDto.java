@@ -18,8 +18,11 @@ public class AuthenticatedUserDto {
     private String address;
     private String password;
     private Long site_id;
+    private String site_name;
+    private Long company_id;
     private String company_logo;
     private String company_name;
     private String company_email;
     private String company_phone;
+    private Boolean terms_accepted;
 }

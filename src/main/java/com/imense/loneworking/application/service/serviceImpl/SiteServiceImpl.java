@@ -59,7 +59,7 @@ public class SiteServiceImpl implements SiteService {
                     dto.setCompanyName(thisSite.getTenant().getName());
                     dto.setLocation(thisSite.getLocation());
                     dto.setNbrZones(NbrZones);
-                    dto.setSiteCreatedAt(thisSite.getCreated_at());
+//                    dto.setSiteCreatedAt(thisSite.getCreated_at());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -67,14 +67,14 @@ public class SiteServiceImpl implements SiteService {
 
     @Override
     public Site addSite(SiteCreationDto siteCreationDto) {
-        Tenant tenant = tenantRepository.findByName(siteCreationDto.getCompanyName());
-        if (tenant == null) {
-            throw new RuntimeException("Tenant not found");
-        }
+//        Tenant tenant = tenantRepository.findByName(siteCreationDto.getCompanyName());
+//        if (tenant == null) {
+//            throw new RuntimeException("Tenant not found");
+//        }
 
         Site site = new Site();
         site.setName(siteCreationDto.getSiteName());
-        site.setTenant(tenant);
+//        site.setTenant(tenant);
         site.setLocation(siteCreationDto.getLocation());
         site.setPlan2d(siteCreationDto.getPlan2d());
         site.setPlan3d(siteCreationDto.getPlan3d());
@@ -88,10 +88,10 @@ public class SiteServiceImpl implements SiteService {
         Site site = siteRepository.findById(siteId)
                 .orElseThrow(() -> new RuntimeException("Site not found"));
 
-        Tenant tenant = tenantRepository.findByName(siteCreationDto.getCompanyName());
-        if (tenant == null) {
-            throw new RuntimeException("Tenant not found");
-        }
+//        Tenant tenant = tenantRepository.findByName(siteCreationDto.getCompanyName());
+//        if (tenant == null) {
+//            throw new RuntimeException("Tenant not found");
+//        }
 
         site.setName(siteCreationDto.getSiteName());
         site.setLocation(siteCreationDto.getLocation());
@@ -100,7 +100,7 @@ public class SiteServiceImpl implements SiteService {
         }
         if(siteCreationDto.getPlan3d() != null){site.setPlan3d(siteCreationDto.getPlan3d());}
 
-        site.setTenant(tenant);
+//        site.setTenant(tenant);
         site.setUpdated_at(LocalDateTime.now());
 
         return siteRepository.save(site);
