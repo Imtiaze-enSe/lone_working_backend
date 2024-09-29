@@ -137,6 +137,7 @@ public class SiteServiceImplSynchro implements SiteServiceSynchro {
         MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
         bodyBuilder.part("site[name]", siteCreationDto.getSiteName());
         bodyBuilder.part("site[address]", siteCreationDto.getLocation());
+        bodyBuilder.part("site[tenant_id]", siteCreationDto.getCompanyId());
 
         return webClient
                 .post()
@@ -197,6 +198,7 @@ public class SiteServiceImplSynchro implements SiteServiceSynchro {
         bodyBuilder.part("site[id]", siteId);
         bodyBuilder.part("site[name]", siteCreationDto.getSiteName());
         bodyBuilder.part("site[address]", siteCreationDto.getLocation());
+        bodyBuilder.part("site[tenant_id]", siteCreationDto.getCompanyId());
 
         // Update the site with WebClient
         return webClient

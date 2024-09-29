@@ -61,7 +61,6 @@ public class SiteController {
     ) {
         try {
             Mono<SiteSynchro> siteMono = siteServiceSynchro.addSite(siteCreationDto);
-
             // Wait for the Mono to complete and get the result
             SiteSynchro siteSynchro = siteMono.block();  // Blocking for simplicity, but you can handle this reactively if needed.
 

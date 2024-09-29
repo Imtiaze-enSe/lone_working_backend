@@ -121,80 +121,80 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addWorker(WorkerCreationDto workerCreationDto) {
-        String username = getCurrentUsername();
-        User authUser = userRepository.findByEmail(username);
-        Long siteId = authUser.getSiteId();
-        Optional<Site> thisSite = siteRepository.findById(siteId);
-        Tenant tenant =  thisSite.get().getTenant();
-        System.out.println(tenant);
-
-        // Check if the email already exists in the database
-        if (userRepository.existsByEmail(workerCreationDto.getEmail())) {
-            throw new RuntimeException("Email already exists");
-        }
-
-        Site site = siteRepository.findByName(workerCreationDto.getSite_name());
-        System.out.println(tenant);
-        if (site == null) {
-            throw new RuntimeException("Site not found");
-        }
-
+//        String username = getCurrentUsername();
+//        User authUser = userRepository.findByEmail(username);
+//        Long siteId = authUser.getSiteId();
+//        Optional<Site> thisSite = siteRepository.findById(siteId);
+//        Tenant tenant =  thisSite.get().getTenant();
+//        System.out.println(tenant);
+//
+//        // Check if the email already exists in the database
+//        if (userRepository.existsByEmail(workerCreationDto.getEmail())) {
+//            throw new RuntimeException("Email already exists");
+//        }
+//
+//        Site site = siteRepository.findByName(workerCreationDto.getSite_name());
+//        System.out.println(tenant);
+//        if (site == null) {
+//            throw new RuntimeException("Site not found");
+//        }
+//
         User user = new User();
-
-        if (workerCreationDto.getProfile_photo() != null) {
-            user.setProfile_photo(Base64.getDecoder().decode(workerCreationDto.getProfile_photo()));
-        } else {
-            user.setProfile_photo(null); // or handle as needed
-        }
-        if (workerCreationDto.getCompany_logo() != null) {
-            user.setCompany_logo(Base64.getDecoder().decode(workerCreationDto.getCompany_logo()));
-        } else {
-            user.setCompany_logo(null); // or handle as needed
-        }
-
-        user.setSiteId(site.getId());
-        user.setFirst_name(workerCreationDto.getFirst_name());
-        user.setLast_name(workerCreationDto.getLast_name());
-        user.setEmail(workerCreationDto.getEmail());
-        user.setPassword(passwordEncoder.encode(workerCreationDto.getPassword()));
-        user.setPhone(workerCreationDto.getPhone());
-        user.setTenant(tenant);
-        user.setStatus("Disconnected");
-        user.setDepartment(workerCreationDto.getDepartment());
-        user.setFunction(workerCreationDto.getFunction());
-        user.setReport_to(workerCreationDto.getReport_to());
-
-        user.setRole(WORKER);
+//
+//        if (workerCreationDto.getProfile_photo() != null) {
+//            user.setProfile_photo(Base64.getDecoder().decode(workerCreationDto.getProfile_photo()));
+//        } else {
+//            user.setProfile_photo(null); // or handle as needed
+//        }
+//        if (workerCreationDto.getCompany_logo() != null) {
+//            user.setCompany_logo(Base64.getDecoder().decode(workerCreationDto.getCompany_logo()));
+//        } else {
+//            user.setCompany_logo(null); // or handle as needed
+//        }
+//
+//        user.setSiteId(site.getId());
+//        user.setFirst_name(workerCreationDto.getFirst_name());
+//        user.setLast_name(workerCreationDto.getLast_name());
+//        user.setEmail(workerCreationDto.getEmail());
+//        user.setPassword(passwordEncoder.encode(workerCreationDto.getPassword()));
+//        user.setPhone(workerCreationDto.getPhone());
+//        user.setTenant(tenant);
+//        user.setStatus("Disconnected");
+//        user.setDepartment(workerCreationDto.getDepartment());
+//        user.setFunction(workerCreationDto.getFunction());
+//        user.setReport_to(workerCreationDto.getReport_to());
+//
+//        user.setRole(WORKER);
 
         return userRepository.save(user);
     }
 
     @Override
     public User updateWorker(Long id, WorkerCreationDto workerCreationDto) {
-        Site site = siteRepository.findByName(workerCreationDto.getSite_name());
-        if (site == null) {
-            throw new RuntimeException("Site not found");
-        }
+//        Site site = siteRepository.findByName(workerCreationDto.getSite_name());
+//        if (site == null) {
+//            throw new RuntimeException("Site not found");
+//        }
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (workerCreationDto.getProfile_photo() != null) {
-            user.setProfile_photo(Base64.getDecoder().decode(workerCreationDto.getProfile_photo()));
-        } else {
-            user.setProfile_photo(null); // or handle as needed
-        }
-        if (workerCreationDto.getCompany_logo() != null) {
-            user.setCompany_logo(Base64.getDecoder().decode(workerCreationDto.getCompany_logo()));
-        } else {
-            user.setCompany_logo(null); // or handle as needed
-        }
-        user.setFirst_name(workerCreationDto.getFirst_name());
-        user.setLast_name(workerCreationDto.getLast_name());
-        user.setEmail(workerCreationDto.getEmail());
-        user.setPassword(passwordEncoder.encode(workerCreationDto.getPassword()));
-        user.setPhone(workerCreationDto.getPhone());
-        user.setDepartment(workerCreationDto.getDepartment());
-        user.setFunction(workerCreationDto.getFunction());
+//
+//        if (workerCreationDto.getProfile_photo() != null) {
+//            user.setProfile_photo(Base64.getDecoder().decode(workerCreationDto.getProfile_photo()));
+//        } else {
+//            user.setProfile_photo(null); // or handle as needed
+//        }
+//        if (workerCreationDto.getCompany_logo() != null) {
+//            user.setCompany_logo(Base64.getDecoder().decode(workerCreationDto.getCompany_logo()));
+//        } else {
+//            user.setCompany_logo(null); // or handle as needed
+//        }
+//        user.setFirst_name(workerCreationDto.getFirst_name());
+//        user.setLast_name(workerCreationDto.getLast_name());
+//        user.setEmail(workerCreationDto.getEmail());
+//        user.setPassword(passwordEncoder.encode(workerCreationDto.getPassword()));
+//        user.setPhone(workerCreationDto.getPhone());
+//        user.setDepartment(workerCreationDto.getDepartment());
+//        user.setFunction(workerCreationDto.getFunction());
 
 
         return userRepository.save(user);
@@ -248,7 +248,7 @@ public class UserServiceImpl implements UserService {
         user.setLast_name(editProfileUserDto.getLast_name());
         user.setEmail(editProfileUserDto.getEmail());
         user.setPhone(editProfileUserDto.getPhone());
-        user.setFunction(editProfileUserDto.getFunction());
+//        user.setFunction(editProfileUserDto.getFunction());
         user.setAddress(editProfileUserDto.getAddress());
         if (editProfileUserDto.getProfile_photo() != null) {
             user.setProfile_photo(Base64.getDecoder().decode(editProfileUserDto.getProfile_photo()));
@@ -268,37 +268,37 @@ public class UserServiceImpl implements UserService {
 
         // Create a new EditProfileMobileDto and populate it with the user's current details
         EditProfileMobileDto editProfileMobileDto = new EditProfileMobileDto();
-        editProfileMobileDto.setId(authUser.getId());
-        if (authUser.getProfile_photo() != null) {
-            editProfileMobileDto.setProfile_photo(Base64.getEncoder().encodeToString(authUser.getProfile_photo()));
-        } else {
-            editProfileMobileDto.setProfile_photo(null);
-        }
-        if (authUser.getCompany_logo() != null) {
-            editProfileMobileDto.setCompany_logo(Base64.getEncoder().encodeToString(authUser.getCompany_logo()));
-        } else {
-            editProfileMobileDto.setCompany_logo(null);
-        }
-        editProfileMobileDto.setFirst_name(authUser.getFirst_name());
-        editProfileMobileDto.setLast_name(authUser.getLast_name());
-        editProfileMobileDto.setEmail(authUser.getEmail());
-        editProfileMobileDto.setPhone(authUser.getPhone());
-        editProfileMobileDto.setFunction(authUser.getFunction());
-        editProfileMobileDto.setAddress(authUser.getAddress());
-        //editProfileMobileDto.setPassword(authUser.getPassword());
-        editProfileMobileDto.setContact_person(authUser.getContact_person());
-        editProfileMobileDto.setContact_person_phone(authUser.getContact_person_phone());
-        editProfileMobileDto.setReport_to(authUser.getReport_to());
-        editProfileMobileDto.setCompany_name(authUser.getTenant().getName());
-        editProfileMobileDto.setBlood_type(authUser.getBlood_type());
-        editProfileMobileDto.setDiseases(authUser.getDiseases());
-        editProfileMobileDto.setMedications(authUser.getMedications());
-        editProfileMobileDto.setAlcoholic(authUser.getAlcoholic());
-        editProfileMobileDto.setSmoking(authUser.getSmoking());
-        editProfileMobileDto.setPin(authUser.getPin());
-        editProfileMobileDto.setCompany_name(authUser.getCompany_name());
-        editProfileMobileDto.setDrugs(authUser.getDrugs());
-        editProfileMobileDto.setDiseases(authUser.getDiseases());
+//        editProfileMobileDto.setId(authUser.getId());
+//        if (authUser.getProfile_photo() != null) {
+//            editProfileMobileDto.setProfile_photo(Base64.getEncoder().encodeToString(authUser.getProfile_photo()));
+//        } else {
+//            editProfileMobileDto.setProfile_photo(null);
+//        }
+//        if (authUser.getCompany_logo() != null) {
+//            editProfileMobileDto.setCompany_logo(Base64.getEncoder().encodeToString(authUser.getCompany_logo()));
+//        } else {
+//            editProfileMobileDto.setCompany_logo(null);
+//        }
+//        editProfileMobileDto.setFirst_name(authUser.getFirst_name());
+//        editProfileMobileDto.setLast_name(authUser.getLast_name());
+//        editProfileMobileDto.setEmail(authUser.getEmail());
+//        editProfileMobileDto.setPhone(authUser.getPhone());
+//        editProfileMobileDto.setFunction(authUser.getFunction());
+//        editProfileMobileDto.setAddress(authUser.getAddress());
+//        //editProfileMobileDto.setPassword(authUser.getPassword());
+//        editProfileMobileDto.setContact_person(authUser.getContact_person());
+//        editProfileMobileDto.setContact_person_phone(authUser.getContact_person_phone());
+//        editProfileMobileDto.setReport_to(authUser.getReport_to());
+//        editProfileMobileDto.setCompany_name(authUser.getTenant().getName());
+//        editProfileMobileDto.setBlood_type(authUser.getBlood_type());
+//        editProfileMobileDto.setDiseases(authUser.getDiseases());
+//        editProfileMobileDto.setMedications(authUser.getMedications());
+//        editProfileMobileDto.setAlcoholic(authUser.getAlcoholic());
+//        editProfileMobileDto.setSmoking(authUser.getSmoking());
+//        editProfileMobileDto.setPin(authUser.getPin());
+//        editProfileMobileDto.setCompany_name(authUser.getCompany_name());
+//        editProfileMobileDto.setDrugs(authUser.getDrugs());
+//        editProfileMobileDto.setDiseases(authUser.getDiseases());
 
         // Return the populated EditProfileMobileDto
         return editProfileMobileDto;
@@ -327,33 +327,33 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(editProfileMobileDto.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Optional.ofNullable(editProfileMobileDto.getFirst_name()).ifPresent(user::setFirst_name);
-        Optional.ofNullable(editProfileMobileDto.getLast_name()).ifPresent(user::setLast_name);
-        Optional.ofNullable(editProfileMobileDto.getEmail()).ifPresent(user::setEmail);
-        Optional.ofNullable(editProfileMobileDto.getPhone()).ifPresent(user::setPhone);
-        Optional.ofNullable(editProfileMobileDto.getFunction()).ifPresent(user::setFunction);
-        Optional.ofNullable(editProfileMobileDto.getAddress()).ifPresent(user::setAddress);
-
-        Optional.ofNullable(editProfileMobileDto.getProfile_photo())
-                .ifPresent(photo -> user.setProfile_photo(Base64.getDecoder().decode(photo)));
-
-        Optional.ofNullable(editProfileMobileDto.getCompany_logo())
-                .ifPresent(photo -> user.setCompany_logo(Base64.getDecoder().decode(photo)));
-
-        Optional.ofNullable(editProfileMobileDto.getPassword())
-                .ifPresent(password -> user.setPassword(passwordEncoder.encode(password)));
-
-        Optional.ofNullable(editProfileMobileDto.getContact_person()).ifPresent(user::setContact_person);
-        Optional.ofNullable(editProfileMobileDto.getContact_person_phone()).ifPresent(user::setContact_person_phone);
-        Optional.ofNullable(editProfileMobileDto.getReport_to()).ifPresent(user::setReport_to);
-        Optional.ofNullable(editProfileMobileDto.getCompany_name()).ifPresent(user::setCompany_name);
-        Optional.ofNullable(editProfileMobileDto.getSmoking()).ifPresent(user::setSmoking);
-        Optional.ofNullable(editProfileMobileDto.getAlcoholic()).ifPresent(user::setAlcoholic);
-        Optional.ofNullable(editProfileMobileDto.getMedications()).ifPresent(user::setMedications);
-        Optional.ofNullable(editProfileMobileDto.getDrugs()).ifPresent(user::setDrugs);
-        Optional.ofNullable(editProfileMobileDto.getDiseases()).ifPresent(user::setDiseases);
-        Optional.ofNullable(editProfileMobileDto.getPin()).ifPresent(user::setPin);
-        Optional.ofNullable(editProfileMobileDto.getBlood_type()).ifPresent(user::setBlood_type);
+//        Optional.ofNullable(editProfileMobileDto.getFirst_name()).ifPresent(user::setFirst_name);
+//        Optional.ofNullable(editProfileMobileDto.getLast_name()).ifPresent(user::setLast_name);
+//        Optional.ofNullable(editProfileMobileDto.getEmail()).ifPresent(user::setEmail);
+//        Optional.ofNullable(editProfileMobileDto.getPhone()).ifPresent(user::setPhone);
+//        Optional.ofNullable(editProfileMobileDto.getFunction()).ifPresent(user::setFunction);
+//        Optional.ofNullable(editProfileMobileDto.getAddress()).ifPresent(user::setAddress);
+//
+//        Optional.ofNullable(editProfileMobileDto.getProfile_photo())
+//                .ifPresent(photo -> user.setProfile_photo(Base64.getDecoder().decode(photo)));
+//
+//        Optional.ofNullable(editProfileMobileDto.getCompany_logo())
+//                .ifPresent(photo -> user.setCompany_logo(Base64.getDecoder().decode(photo)));
+//
+//        Optional.ofNullable(editProfileMobileDto.getPassword())
+//                .ifPresent(password -> user.setPassword(passwordEncoder.encode(password)));
+//
+//        Optional.ofNullable(editProfileMobileDto.getContact_person()).ifPresent(user::setContact_person);
+//        Optional.ofNullable(editProfileMobileDto.getContact_person_phone()).ifPresent(user::setContact_person_phone);
+//        Optional.ofNullable(editProfileMobileDto.getReport_to()).ifPresent(user::setReport_to);
+//        Optional.ofNullable(editProfileMobileDto.getCompany_name()).ifPresent(user::setCompany_name);
+//        Optional.ofNullable(editProfileMobileDto.getSmoking()).ifPresent(user::setSmoking);
+//        Optional.ofNullable(editProfileMobileDto.getAlcoholic()).ifPresent(user::setAlcoholic);
+//        Optional.ofNullable(editProfileMobileDto.getMedications()).ifPresent(user::setMedications);
+//        Optional.ofNullable(editProfileMobileDto.getDrugs()).ifPresent(user::setDrugs);
+//        Optional.ofNullable(editProfileMobileDto.getDiseases()).ifPresent(user::setDiseases);
+//        Optional.ofNullable(editProfileMobileDto.getPin()).ifPresent(user::setPin);
+//        Optional.ofNullable(editProfileMobileDto.getBlood_type()).ifPresent(user::setBlood_type);
 
         return userRepository.save(user);
     }

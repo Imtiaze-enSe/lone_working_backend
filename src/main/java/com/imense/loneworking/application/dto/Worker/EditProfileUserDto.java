@@ -14,6 +14,6 @@ public class EditProfileUserDto {
     private String last_name;
     private String email;
     private String phone;
-    private String function;
+    private Long function_id;
     private String address;
 }

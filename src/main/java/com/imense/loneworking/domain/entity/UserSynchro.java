@@ -17,6 +17,8 @@ public class UserSynchro {
     @Column(name = "ref_id")  // Map the database column ref_id to this field
     private Long refId;
 
+    private Long siteId;
+
     private String contact_person;
     private String contact_person_phone;
 

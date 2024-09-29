@@ -57,7 +57,7 @@ public class SecurityConfig {
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/safety-tracker/**").permitAll()
-                        .requestMatchers("/api/mobile/**").hasAnyRole(ADMIN.name(), WORKER.name())
+                        .requestMatchers("/api/mobile/**").permitAll()
                         .requestMatchers(GET, "/api/mobile/**").hasAnyAuthority(ADMIN_READ.name(), WORKER_READ.name())
                         .requestMatchers(POST, "/api/mobile/**").hasAnyAuthority(ADMIN_CREATE.name(), WORKER_CREATE.name())
                         .requestMatchers(PUT, "/api/mobile/**").hasAnyAuthority(ADMIN_UPDATE.name(), WORKER_UPDATE.name())

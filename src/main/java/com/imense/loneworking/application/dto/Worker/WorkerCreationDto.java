@@ -15,9 +15,9 @@ public class WorkerCreationDto {
     private String email;
     private String password;
     private String phone;
-    private String company_logo; // company id
-    private String report_to;
-    private String department;
-    private String function;
-    private String site_name; // side id
+    private Long company_id;
+    private Long report_to_id;
+    private Long department_id;
+    private Long function_id;
+    private Long site_id;
 }

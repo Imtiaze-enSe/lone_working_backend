@@ -12,7 +12,7 @@ import org.n52.jackson.datatype.jts.GeometryDeserializer;
 @Setter
 public class SiteCreationDto {
     private String SiteName;
-    private String companyName; // Int company id
+    private String companyId; // Int company id
     private String location; // adress
 
     @JsonDeserialize(using = GeometryDeserializer.class)
