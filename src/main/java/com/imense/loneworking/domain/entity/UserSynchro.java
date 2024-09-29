@@ -22,6 +22,7 @@ public class UserSynchro {
     private String contact_person;
     private String contact_person_phone;
 
+
     private Geometry position;
     private String connectionStatus;
 

@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ZoneSynchroRepository extends JpaRepository<ZoneSynchro, Long> {
     Optional<ZoneSynchro> findByRefId(Long ref_id);
+    void deleteByRefId(Long ref_id);
 }
