@@ -23,14 +23,25 @@ public class AuthController {
 
     // Registration API
     @PostMapping("auth/register")
-    public ResponseEntity<User> register(@RequestBody RegistrationDto registrationDto) {
+    public ResponseEntity<?> register(@RequestBody RegistrationDto registrationDto) {
         try {
+            // Register the user
             User registeredUser = authService.registerUser(registrationDto);
-            return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);  // Return 201 Created on successful registration
+
+            // Return 201 Created on successful registration
+            return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+
+        } catch (IllegalArgumentException ex) {
+            // Handle case where email is already in use or invalid input
+            return new ResponseEntity<>("Email is already in use or invalid input", HttpStatus.CONFLICT);
+
         } catch (Exception ex) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  // Return 500 Internal Server Error if something goes wrong
+
+            // Return 500 Internal Server Error with exception message
+            return new ResponseEntity<>("An error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     // Mobile Login API
     @PostMapping("auth/loginmobile")

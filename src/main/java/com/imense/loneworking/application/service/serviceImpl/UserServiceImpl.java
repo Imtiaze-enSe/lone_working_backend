@@ -126,7 +126,6 @@ public class UserServiceImpl implements UserService {
         Long siteId = authUser.getSiteId();
         Optional<Site> thisSite = siteRepository.findById(siteId);
         Tenant tenant =  thisSite.get().getTenant();
-        System.out.println(tenant);
 
         // Check if the email already exists in the database
         if (userRepository.existsByEmail(workerCreationDto.getEmail())) {

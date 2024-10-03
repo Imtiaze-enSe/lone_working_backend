@@ -1,6 +1,7 @@
 package com.imense.loneworking.application.dto.Worker;
 
 
+import jakarta.validation.constraints.Email;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ public class WorkerCreationDto {
     private String profile_photo;
     private String first_name;
     private String last_name;
+    @Email
     private String email;
     private String password;
     private String phone;

@@ -56,6 +56,7 @@ public class SecurityConfig {
                         .requestMatchers("/location").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/tenant/**").permitAll()
                         .requestMatchers("/api/mobile/**").hasAnyRole(ADMIN.name(), WORKER.name())
                         .requestMatchers(GET, "/api/mobile/**").hasAnyAuthority(ADMIN_READ.name(), WORKER_READ.name())
                         .requestMatchers(POST, "/api/mobile/**").hasAnyAuthority(ADMIN_CREATE.name(), WORKER_CREATE.name())
