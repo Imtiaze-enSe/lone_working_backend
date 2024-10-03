@@ -3,8 +3,10 @@ package com.imense.loneworking.application.service.serviceImpl;
 import com.imense.loneworking.application.dto.Authentification.RegistrationDto;
 import com.imense.loneworking.application.dto.Authentification.LoginDto;
 import com.imense.loneworking.application.service.serviceInterface.AuthService;
+import com.imense.loneworking.domain.entity.Site;
 import com.imense.loneworking.domain.entity.Tenant;
 import com.imense.loneworking.domain.entity.User;
+import com.imense.loneworking.domain.repository.SiteRepository;
 import com.imense.loneworking.domain.repository.TenantRepository;
 import com.imense.loneworking.domain.repository.UserRepository;
 import com.imense.loneworking.infrastructure.security.JwtUtil;
@@ -35,16 +37,16 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;
-    private final TenantRepository tenantRepository;
+    private final SiteRepository siteRepository;
 
     public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService,
-                           TenantRepository tenantRepository) {
+                           SiteRepository siteRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
-        this.tenantRepository = tenantRepository;
+        this.siteRepository = siteRepository;
     }
     private String getCurrentUsername() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -59,15 +61,16 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User user = new User();
-        Optional<Tenant> tenantOptional = tenantRepository.findById(registrationDto.getTenant_id());
+        Optional<Site> siteOptional = siteRepository.findById(registrationDto.getSite_id());
 
         user.setEmail(registrationDto.getEmail());
         user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         user.setRole(registrationDto.getRole());
         user.setSiteId(registrationDto.getSite_id());
 
-        if (tenantOptional.isPresent()) {
-            Tenant tenant = tenantOptional.get();
+        if (siteOptional.isPresent()) {
+            Site site = siteOptional.get();
+            Tenant tenant = site.getTenant();
             user.setTenant(tenant);
         }
 

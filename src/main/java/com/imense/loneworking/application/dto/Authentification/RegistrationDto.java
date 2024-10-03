@@ -24,5 +24,4 @@ public class RegistrationDto {
     private UserRole role;
 
     private Long site_id;
-    private Long tenant_id;
 }

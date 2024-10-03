@@ -42,6 +42,16 @@ public class SiteController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    // Add a first site
+    @PostMapping("tenant/firstSite")
+    public ResponseEntity<Site> addFirstSite(@RequestBody SiteCreationDto siteCreationDto) {
+        try {
+            Site site = siteService.addSite(siteCreationDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(site);  // 201 Created
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     // Update a site by ID
     @PutMapping("web/site/{id}")

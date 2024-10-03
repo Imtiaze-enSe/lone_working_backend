@@ -17,4 +17,5 @@ public interface SiteService {
     List<SiteDashboardDto> getSiteInfoDashboard();
 
     List<SiteQrCodeDto> getSiteInfoQrCode();
+
 }
