@@ -1,30 +1,19 @@
-package com.imense.loneworking.domain.entity;
+package com.imense.loneworking.application.dto.Tenant;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.imense.loneworking.domain.entity.Enum.TenantsPresentationTypeEnum;
 import com.imense.loneworking.domain.entity.Enum.TenantsTypeEnum;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import jakarta.validation.constraints.NotNull;
 
-import java.util.Date;
-import java.util.List;
+@Data
+public class TenantCreationDto {
 
-@Entity
-@Getter
-@Setter
-
-@Table(name = "tenants")
-public class Tenant {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @NotNull(message = "Name is required")
     private String name;
-    @Enumerated(EnumType.STRING)
+
     private TenantsTypeEnum type;
     private Long parent_id;
     private Boolean status;
-    @Enumerated(EnumType.STRING)
     private TenantsPresentationTypeEnum presentation_type;
     private Long contractor_site_id;
     private String email;
@@ -32,9 +21,7 @@ public class Tenant {
     private String legal_form;
     private String tva;
     private String nace;
-    @Lob
     private String description;
-    @Lob
     private String address;
     private String n_address;
     private String box;
@@ -42,22 +29,11 @@ public class Tenant {
     private String city;
     private String country;
     private String phone;
-    private byte[] logo;
+    private String logo;
     private String website;
     private String medicName;
     private String medic_speciality;
     private String medic_phone;
-    private byte[] medic_photo;
+    private String medic_photo;
     private String n_emergency;
-    private Date created_at;
-    private Date updated_at;
-    private Date deleted_at;
-
-    @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Site> sites;
-
-    @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<User> users;
-
 }

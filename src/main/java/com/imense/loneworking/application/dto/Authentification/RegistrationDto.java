@@ -1,19 +1,27 @@
 package com.imense.loneworking.application.dto.Authentification;
 
 import com.imense.loneworking.domain.entity.Enum.UserRole;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
+
 
 @Data
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegistrationDto {
+    @NotNull
     private String email;
-    private String password;
-    private UserRole role;
-    private int site_id;
 
+    @NotNull
+    private String password;
+
+    @NotNull
+    @Pattern(regexp = "USER|ADMIN|WORKER", message = "Invalid role")
+    private UserRole role;
+
+    private Long site_id;
 }

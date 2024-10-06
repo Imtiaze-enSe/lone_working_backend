@@ -7,6 +7,7 @@ import com.imense.loneworking.application.dto.Site.SiteInfoDto;
 import com.imense.loneworking.application.service.serviceInterface.SiteService;
 import com.imense.loneworking.domain.entity.Site;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,32 +20,80 @@ public class SiteController {
     public SiteController(SiteService siteService) {
         this.siteService = siteService;
     }
+
+    // Get list of site info
     @GetMapping("web/sites")
-    public List<SiteInfoDto> getSiteInfo() {
-        return siteService.getSiteInfo();
+    public ResponseEntity<List<SiteInfoDto>> getSiteInfo() {
+        try {
+            List<SiteInfoDto> siteInfoList = siteService.getSiteInfo();
+            return ResponseEntity.ok(siteInfoList);  // 200 OK
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
+    // Add a new site
     @PostMapping("web/site")
-    public Site addSite(@RequestBody SiteCreationDto siteCreationDto) {
-        return siteService.addSite(siteCreationDto);
+    public ResponseEntity<Site> addSite(@RequestBody SiteCreationDto siteCreationDto) {
+        try {
+            Site site = siteService.addSite(siteCreationDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(site);  // 201 Created
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    // Add a first site
+    @PostMapping("tenant/firstSite")
+    public ResponseEntity<Site> addFirstSite(@RequestBody SiteCreationDto siteCreationDto) {
+        try {
+            Site site = siteService.addSite(siteCreationDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(site);  // 201 Created
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
+    // Update a site by ID
     @PutMapping("web/site/{id}")
-    public Site updateSite(@PathVariable Long id, @RequestBody SiteCreationDto siteCreationDto) {
-        System.out.println(siteCreationDto);
-        return siteService.updateSite(id, siteCreationDto);
+    public ResponseEntity<Site> updateSite(@PathVariable Long id, @RequestBody SiteCreationDto siteCreationDto) {
+        try {
+            Site site = siteService.updateSite(id, siteCreationDto);
+            return ResponseEntity.ok(site);  // 200 OK
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
+    // Delete a site by ID
     @DeleteMapping("web/site/{id}")
     public ResponseEntity<Void> deleteSite(@PathVariable Long id) {
-        siteService.deleteSite(id);
-        return ResponseEntity.noContent().build();
+        try {
+            siteService.deleteSite(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();  // 204 No Content
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
+    // Get site dashboard info
     @GetMapping("web/dashboard/sites")
-    public List<SiteDashboardDto> getSiteInfoDashboard() {
-        return siteService.getSiteInfoDashboard();
+    public ResponseEntity<List<SiteDashboardDto>> getSiteInfoDashboard() {
+        try {
+            List<SiteDashboardDto> dashboardSites = siteService.getSiteInfoDashboard();
+            return ResponseEntity.ok(dashboardSites);  // 200 OK
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
+    // Get site info for QR Code
     @GetMapping("web/qrCode/sites")
-    public List<SiteQrCodeDto> getSiteInfoQrCode(){return siteService.getSiteInfoQrCode();}
+    public ResponseEntity<List<SiteQrCodeDto>> getSiteInfoQrCode() {
+        try {
+            List<SiteQrCodeDto> qrCodeSites = siteService.getSiteInfoQrCode();
+            return ResponseEntity.ok(qrCodeSites);  // 200 OK
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

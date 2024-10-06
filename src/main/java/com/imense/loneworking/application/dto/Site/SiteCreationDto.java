@@ -1,5 +1,6 @@
 package com.imense.loneworking.application.dto.Site;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

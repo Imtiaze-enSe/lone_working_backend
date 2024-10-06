@@ -3,7 +3,11 @@ package com.imense.loneworking.application.service.serviceImpl;
 import com.imense.loneworking.application.dto.Authentification.RegistrationDto;
 import com.imense.loneworking.application.dto.Authentification.LoginDto;
 import com.imense.loneworking.application.service.serviceInterface.AuthService;
+import com.imense.loneworking.domain.entity.Site;
+import com.imense.loneworking.domain.entity.Tenant;
 import com.imense.loneworking.domain.entity.User;
+import com.imense.loneworking.domain.repository.SiteRepository;
+import com.imense.loneworking.domain.repository.TenantRepository;
 import com.imense.loneworking.domain.repository.UserRepository;
 import com.imense.loneworking.infrastructure.security.JwtUtil;
 import com.imense.loneworking.presentation.response.InvalidPinException;
@@ -23,6 +27,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -32,25 +37,42 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;
+    private final SiteRepository siteRepository;
 
-    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService) {
+    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService,
+                           SiteRepository siteRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
+        this.siteRepository = siteRepository;
     }
     private String getCurrentUsername() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userDetails.getUsername();
     }
+
     @Override
     public User registerUser(RegistrationDto registrationDto) {
+        // Check if email already exists in the system
+        if (userRepository.existsByEmail(registrationDto.getEmail())) {
+            throw new IllegalArgumentException("Email is already in use"); // Or use a custom exception if needed
+        }
+
         User user = new User();
+        Optional<Site> siteOptional = siteRepository.findById(registrationDto.getSite_id());
+
         user.setEmail(registrationDto.getEmail());
         user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         user.setRole(registrationDto.getRole());
-        user.setSiteId(Long.valueOf(registrationDto.getSite_id()));
+        user.setSiteId(registrationDto.getSite_id());
+
+        if (siteOptional.isPresent()) {
+            Site site = siteOptional.get();
+            Tenant tenant = site.getTenant();
+            user.setTenant(tenant);
+        }
 
         User savedUser = userRepository.save(user);
 
@@ -60,6 +82,7 @@ public class AuthServiceImpl implements AuthService {
 
         return userRepository.save(savedUser);
     }
+
 
     @Override
     public String authenticateUserWeb(LoginDto loginDto) {
