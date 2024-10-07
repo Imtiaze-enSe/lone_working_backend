@@ -18,4 +18,5 @@ public class UserDashboardDto {
     private String status;
     private Long site_id;
     private String phone;
+    private String email;
 }
