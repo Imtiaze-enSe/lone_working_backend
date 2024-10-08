@@ -180,18 +180,16 @@ public class UserServiceImpl implements UserService {
 
         if (workerCreationDto.getProfile_photo() != null) {
             user.setProfile_photo(Base64.getDecoder().decode(workerCreationDto.getProfile_photo()));
-        } else {
-            user.setProfile_photo(null); // or handle as needed
         }
         if (workerCreationDto.getCompany_logo() != null) {
             user.setCompany_logo(Base64.getDecoder().decode(workerCreationDto.getCompany_logo()));
-        } else {
-            user.setCompany_logo(null); // or handle as needed
         }
         user.setFirst_name(workerCreationDto.getFirst_name());
         user.setLast_name(workerCreationDto.getLast_name());
         user.setEmail(workerCreationDto.getEmail());
-        user.setPassword(passwordEncoder.encode(workerCreationDto.getPassword()));
+        if (workerCreationDto.getPassword() != null){
+            user.setPassword(passwordEncoder.encode(workerCreationDto.getPassword()));
+        }
         user.setPhone(workerCreationDto.getPhone());
         user.setDepartment(workerCreationDto.getDepartment());
         user.setFunction(workerCreationDto.getFunction());
