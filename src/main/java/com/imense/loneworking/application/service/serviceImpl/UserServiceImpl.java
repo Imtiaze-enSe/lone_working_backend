@@ -171,12 +171,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateWorker(Long id, WorkerCreationDto workerCreationDto) {
-        Site site = siteRepository.findByName(workerCreationDto.getSite_name());
+        Site site = siteRepository.findByName(workerCreationDto.getSite_name()); // Use the correct repository query
         if (site == null) {
             throw new RuntimeException("Site not found");
         }
+
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setSiteId(site.getId());         // Set the site ID
+        user.setSite_name(site.getName());    // Use the `name` field from `Site`
+
+        // Update other user details...
+        user.setFirst_name(workerCreationDto.getFirst_name());
+        user.setLast_name(workerCreationDto.getLast_name());
+        user.setEmail(workerCreationDto.getEmail());
+        user.setPhone(workerCreationDto.getPhone());
+        user.setDepartment(workerCreationDto.getDepartment());
+        user.setFunction(workerCreationDto.getFunction());
 
         if (workerCreationDto.getProfile_photo() != null) {
             user.setProfile_photo(Base64.getDecoder().decode(workerCreationDto.getProfile_photo()));
@@ -184,16 +196,6 @@ public class UserServiceImpl implements UserService {
         if (workerCreationDto.getCompany_logo() != null) {
             user.setCompany_logo(Base64.getDecoder().decode(workerCreationDto.getCompany_logo()));
         }
-        user.setFirst_name(workerCreationDto.getFirst_name());
-        user.setLast_name(workerCreationDto.getLast_name());
-        user.setEmail(workerCreationDto.getEmail());
-        if (workerCreationDto.getPassword() != null){
-            user.setPassword(passwordEncoder.encode(workerCreationDto.getPassword()));
-        }
-        user.setPhone(workerCreationDto.getPhone());
-        user.setDepartment(workerCreationDto.getDepartment());
-        user.setFunction(workerCreationDto.getFunction());
-
 
         return userRepository.save(user);
     }
